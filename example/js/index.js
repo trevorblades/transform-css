@@ -1,10 +1,14 @@
+/* global Fishsticss */
+
 $(document).ready(function(){
 	
 	var fish = new Fishsticss();
 	
 	/* In/out */
-	var input = $('textarea#input'),
-		output = $('textarea#output');
+	var input = $('#input');
+	var output = $('#output');
+
+	input.val('/* Comments ain\'t no thang! */\n\nbody {\n\twidth: 0px;\n\tcolor: #000;\n}\n\nbody #div {\n\twidth: 100%;\n}');
 	
 	/* Settings */
 	var settings = {
