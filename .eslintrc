@@ -1,5 +1,5 @@
 {
-  "extends": "planet/react",
+  "extends": "planet",
   "globals": {
     "analytics": false
   }
