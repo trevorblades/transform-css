@@ -7,7 +7,7 @@
   <body>
   	<script type="text/javascript" src="./fishsticss.js"></script>
     <script type="text/javascript">
-      var css = '.i-am-a-class {property: rule;} .i-am-another-class .subclass {property:rule;}.i-am-a-class {property2: rule2;} ';
+      var css = '.class {property: rule;} #id {property: rule;} .class {property2: rule2;} .class .subclass {property: rule;}';
 
       var fishsticss = new Fishsticss();
       console.log(fishsticss.scrub(css));
