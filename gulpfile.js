@@ -15,9 +15,9 @@ var EXAMPLE_DIR = './example/';
  */
 
 function devBuild() {
-  return browserify(SRC_DIR + 'fishsticss.js', {debug: true})
+  return browserify(SRC_DIR + 'main.js', {debug: true})
      .bundle()
-     .pipe(source('fishsticss.js'))
+     .pipe(source('main.js'))
      .pipe(buffer())
      .pipe(sourcemaps.init({loadMaps: true}))
      .pipe(sourcemaps.write('./'))
