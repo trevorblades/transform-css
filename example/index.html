@@ -10,7 +10,8 @@
       var css = '.class {property: rule;} #id {property: rule;} .class {property2: rule2;} .class .subclass {property: rule;}';
 
       var fishsticss = new Fishsticss();
-      console.log(fishsticss.scrub(css));
+      var styles = fishsticss.scrub(css);
+      console.log(fishsticss.print(styles));
     </script>
   </body>
 </html>

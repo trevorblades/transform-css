@@ -1,17 +1,24 @@
 
 // TODO: prevent capturing spaces at the end of a match so we don't use trim() everywhere
-var patterns = {
+var PATTERNS = {
   selector: /(.+?){\s*([\S\s]*?)\s*\}/gm,
   rule: /(.+?):(.+?);*/gm,
   comment: /\/\*[\S\s]*\*\//gm
 };
 
+var TAB_CHARACTER = ' ';
+var TAB_SIZE = 2;
+
 var Fishsticss = function(options) {
+
+  // Available options include `tabCharacter` and `tabSize`
+
   return {
+
     scrub: function(css) {
 
       var styles = {};
-      var match = patterns.selector.exec(css);
+      var match = PATTERNS.selector.exec(css);
       while (match) {
 
         var selector = match[1].trim();
@@ -33,7 +40,7 @@ var Fishsticss = function(options) {
           styles[selector] = {rules: rules};
         }
 
-        match = patterns.selector.exec(css);
+        match = PATTERNS.selector.exec(css);
       }
 
       var selectors = Object.keys(styles);
@@ -55,6 +62,35 @@ var Fishsticss = function(options) {
       }
 
       return styles;
+    },
+
+    tab: function(level) {
+      var tabCharacter = options && options.tabCharacter || TAB_CHARACTER;
+      var tabSize = options && options.tabSize || TAB_SIZE;
+      return tabCharacter.repeat(tabSize * level);
+    },
+
+    print: function(styles, level) {
+
+      var output = '';
+      level = level || 0;
+
+      for (var selector in styles) {
+        var style = styles[selector];
+        output += this.tab(level);
+        output += selector + ' {\n';
+        for (var property in style.rules) {
+          output += this.tab(level + 1);
+          output += property + ': ' + style.rules[property] + ';\n';
+        }
+        if (style.children) {
+          output += this.print(style.children, level + 1);
+        }
+        output += this.tab(level);
+        output += '}\n';
+      }
+
+      return output;
     }
   };
 };
