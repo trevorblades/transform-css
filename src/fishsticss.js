@@ -42,7 +42,7 @@ var fishsticss = {
     var selectors = Object.keys(styles);
     for (var key in styles) {
       var selectorIndex = selectors.findIndex(function(selector) {
-        return key !== selector && key.indexOf(selector) > -1;
+        return key !== selector && key.indexOf(selector) === 0;
       });
       if (selectorIndex > -1) {
         var parentSelector = selectors[selectorIndex];

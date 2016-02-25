@@ -7,8 +7,17 @@ var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
     '\twidth: 0px;\n' +
     '\tcolor: #000;\n' +
     '}\n' +
-    'body #div {\n' +
+    '#div body {\n' +
     '\twidth: 100%;\n' +
+    '}\n' +
+    '#div body {\n' +
+    '\theight: 100%;\n' +
+    '}\n' +
+    'body #div {\n' +
+    '\theight: 100%;\n' +
+    '}\n' +
+    '#div body .class {\n' +
+    '\theight: 100%;\n' +
     '}';
 
 var App = React.createClass({
