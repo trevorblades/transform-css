@@ -56,15 +56,19 @@ var fishsticss = {
       }
 
       if (selectorIndex > -1) {
+
         var parentSelector = selectors[selectorIndex];
         if (key !== parentSelector) {
+
           if (!styles[parentSelector].children) {
             styles[parentSelector].children = {};
           }
+
           var childSelector = key.replace(parentSelector, '');
           if (childSelector.charAt(0) !== ' ') {
             childSelector = '&' + childSelector;
           }
+
           styles[parentSelector].children[childSelector.trim()] = styles[key];
           styles[parentSelector].children = this._sort(styles[parentSelector].children);
 
@@ -78,6 +82,7 @@ var fishsticss = {
 
   _sort: function(styles) {
 
+    // Move subclasses to the top of the list of children
     var selectors = Object.keys(styles).reverse();
     for (var i = selectors.length - 1; i >= 0; i--) {
       var nextIndex = selectors[i].indexOf('&') === 0 ? 0 : selectors.length - 1;
@@ -105,6 +110,7 @@ var fishsticss = {
 
     var styles = this._rinse(this._scrub(this._scrape(css)));
 
+    // Get the comments
     var comments = [];
     var match = COMMENT_PATTERN.exec(css);
     while (match) {
@@ -136,6 +142,7 @@ var fishsticss = {
 
       var style = styles[selector];
 
+      // Print the comments
       if (comments && comments.length && comments[0].index < style.index) {
         if (output.length > 0 && output.charAt(output.length - 1) !== '\n') {
           output += '\n';
@@ -144,6 +151,7 @@ var fishsticss = {
         comments.splice(0, 1);
       }
 
+      // Print the styles
       output += this._tab(level, options) + selector + ' {\n';
       for (var property in style.rules) {
         output += this._tab(level + 1, options);
