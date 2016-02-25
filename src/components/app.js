@@ -21,7 +21,8 @@ var App = React.createClass({
         <textarea className="fs-input"
             onKeyUp={this._onInputChange}
             ref="input"/>
-        <div className="fs-output">{this.state.output}</div>
+        <div className="fs-output"
+            dangerouslySetInnerHTML={{__html: this.state.output}}/>
       </div>
     );
   }
