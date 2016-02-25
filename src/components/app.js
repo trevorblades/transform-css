@@ -3,20 +3,19 @@ var React = require('react');
 var fishsticss = require('../fishsticss');
 
 var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
-    'body {\n' +
-    '\twidth: 0px;\n' +
-    '\tcolor: #000;\n' +
-    '}\n' +
     '#div body {\n' +
     '\twidth: 100%;\n' +
     '}\n' +
     '#div body {\n' +
     '\theight: 100%;\n' +
     '}\n' +
-    'body #div {\n' +
+    '#div body .class.sub-class {\n' +
     '\theight: 100%;\n' +
     '}\n' +
     '#div body .class {\n' +
+    '\theight: 100%;\n' +
+    '}\n' +
+    '#div body .class .child-chlass {\n' +
     '\theight: 100%;\n' +
     '}';
 
@@ -24,12 +23,12 @@ var App = React.createClass({
 
   getInitialState: function() {
     return {
-      output: fishsticss.print(fishsticss.scrub(DEFAULT_INPUT))
+      output: fishsticss.print(fishsticss.wash(DEFAULT_INPUT))
     };
   },
 
   _onInputChange: function() {
-    var styles = fishsticss.scrub(this.refs.input.value);
+    var styles = fishsticss.wash(this.refs.input.value);
     this.setState({output: fishsticss.print(styles)});
   },
 

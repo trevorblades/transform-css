@@ -1,4 +1,3 @@
-
 // TODO: prevent capturing spaces at the end of a match so we don't use trim() everywhere
 var PATTERNS = {
   selector: /(.+?){\s*([\S\s]*?)\s*\}/gm,
@@ -11,9 +10,10 @@ var TAB_SIZE = 2;
 
 var fishsticss = {
 
-  scrub: function(css) {
+  _soak: function(css) {
 
     var styles = {};
+
     var match = PATTERNS.selector.exec(css);
     while (match) {
 
@@ -39,11 +39,19 @@ var fishsticss = {
       match = PATTERNS.selector.exec(css);
     }
 
+    return styles;
+  },
+
+  _scrub: function(styles) {
+
     var selectors = Object.keys(styles);
     for (var key in styles) {
-      var selectorIndex = selectors.findIndex(function(selector) {
-        return key !== selector && key.indexOf(selector) === 0;
-      });
+      var selectorIndex = -1;
+      for (var i = 0; i < selectors.length; i++) {
+        if (key !== selectors[i] && key.indexOf(selectors[i]) === 0) {
+          selectorIndex = i;
+        }
+      }
       if (selectorIndex > -1) {
         var parentSelector = selectors[selectorIndex];
         if (key !== parentSelector) {
@@ -52,7 +60,7 @@ var fishsticss = {
           }
           styles[parentSelector]
               .children[key.replace(parentSelector, '').trim()] = styles[key];
-          delete styles[key];
+          styles[key].nested = true;
         }
       }
     }
@@ -60,7 +68,21 @@ var fishsticss = {
     return styles;
   },
 
-  tab: function(level, options) {
+  _rinse: function(styles) {
+    for (var key in styles) {
+      if (styles[key].nested) {
+        delete styles[key];
+      }
+    }
+    return styles;
+  },
+
+  wash: function(css) {
+    var styles = this._soak(css);
+    return this._rinse(this._scrub(styles));
+  },
+
+  _tab: function(level, options) {
     var tabCharacter = options && options.tabCharacter || TAB_CHARACTER;
     var tabSize = options && options.tabSize || TAB_SIZE;
     return tabCharacter.repeat(tabSize * level);
@@ -73,16 +95,16 @@ var fishsticss = {
 
     for (var selector in styles) {
       var style = styles[selector];
-      output += this.tab(level, options);
+      output += this._tab(level, options);
       output += selector + ' {\n';
       for (var property in style.rules) {
-        output += this.tab(level + 1, options);
+        output += this._tab(level + 1, options);
         output += property + ': ' + style.rules[property] + ';\n';
       }
       if (style.children) {
         output += this.print(style.children, {level: level + 1});
       }
-      output += this.tab(level, options);
+      output += this._tab(level, options);
       output += '}\n';
     }
 
