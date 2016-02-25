@@ -77,11 +77,10 @@ var fishsticss = {
 
   _sort: function(styles) {
 
-    var selectors = Object.keys(styles);
+    var selectors = Object.keys(styles).reverse();
     for (var i = selectors.length - 1; i >= 0; i--) {
-      if (selectors[i].charAt('&')) {
-        selectors.splice(0, 0, selectors.splice(i, 1)[0]);
-      }
+      var nextIndex = selectors[i].indexOf('&') === 0 ? 0 : selectors.length - 1;
+      selectors.splice(nextIndex, 0, selectors.splice(i, 1)[0]);
     }
 
     var sorted = {};
