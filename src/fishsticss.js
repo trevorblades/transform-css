@@ -46,12 +46,14 @@ var fishsticss = {
 
     var selectors = Object.keys(styles);
     for (var key in styles) {
+
       var selectorIndex = -1;
       for (var i = 0; i < selectors.length; i++) {
         if (key !== selectors[i] && key.indexOf(selectors[i]) === 0) {
           selectorIndex = i;
         }
       }
+
       if (selectorIndex > -1) {
         var parentSelector = selectors[selectorIndex];
         if (key !== parentSelector) {
@@ -62,14 +64,32 @@ var fishsticss = {
           if (childSelector.charAt(0) !== ' ') {
             childSelector = '&' + childSelector;
           }
-          styles[parentSelector]
-              .children[childSelector.trim()] = styles[key];
+          styles[parentSelector].children[childSelector.trim()] = styles[key];
+          styles[parentSelector].children = this._sort(styles[parentSelector].children);
+
           styles[key].nested = true;
         }
       }
     }
 
     return styles;
+  },
+
+  _sort: function(styles) {
+
+    var selectors = Object.keys(styles);
+    for (var i = selectors.length - 1; i >= 0; i--) {
+      if (selectors[i].charAt('&')) {
+        selectors.splice(0, 0, selectors.splice(i, 1)[0]);
+      }
+    }
+
+    var sorted = {};
+    selectors.forEach(function(selector) {
+      sorted[selector] = styles[selector];
+    });
+
+    return sorted;
   },
 
   _rinse: function(styles) {
