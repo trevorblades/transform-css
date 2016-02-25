@@ -3,19 +3,19 @@ var React = require('react');
 var fishsticss = require('../fishsticss');
 
 var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
-    '#div body {\n' +
+    '#id {\n' +
     '\twidth: 100%;\n' +
     '}\n' +
-    '#div body {\n' +
+    '#id {\n' +
     '\theight: 100%;\n' +
     '}\n' +
-    '#div body .class .child-chlass {\n' +
+    '#id .class {\n' +
     '\theight: 100%;\n' +
     '}\n' +
-    '#div body .class.sub-class {\n' +
+    '#id .class .child-class {\n' +
     '\theight: 100%;\n' +
     '}\n' +
-    '#div body .class {\n' +
+    '#id .class.sub-class {\n' +
     '\theight: 100%;\n' +
     '}';
 
