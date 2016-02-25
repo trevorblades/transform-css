@@ -9,13 +9,13 @@ var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
     '#div body {\n' +
     '\theight: 100%;\n' +
     '}\n' +
+    '#div body .class .child-chlass {\n' +
+    '\theight: 100%;\n' +
+    '}\n' +
     '#div body .class.sub-class {\n' +
     '\theight: 100%;\n' +
     '}\n' +
     '#div body .class {\n' +
-    '\theight: 100%;\n' +
-    '}\n' +
-    '#div body .class .child-chlass {\n' +
     '\theight: 100%;\n' +
     '}';
 

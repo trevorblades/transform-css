@@ -58,8 +58,12 @@ var fishsticss = {
           if (!styles[parentSelector].children) {
             styles[parentSelector].children = {};
           }
+          var childSelector = key.replace(parentSelector, '');
+          if (childSelector.charAt(0) !== ' ') {
+            childSelector = '&' + childSelector;
+          }
           styles[parentSelector]
-              .children[key.replace(parentSelector, '').trim()] = styles[key];
+              .children[childSelector.trim()] = styles[key];
           styles[key].nested = true;
         }
       }
