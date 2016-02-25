@@ -23,13 +23,12 @@ var App = React.createClass({
 
   getInitialState: function() {
     return {
-      output: fishsticss.print(fishsticss.wash(DEFAULT_INPUT))
+      output: fishsticss.parse(DEFAULT_INPUT)
     };
   },
 
   _onInputChange: function() {
-    var styles = fishsticss.wash(this.refs.input.value);
-    this.setState({output: fishsticss.print(styles)});
+    this.setState({output: fishsticss.parse(this.refs.input.value)});
   },
 
   _onOutputClick: function() {

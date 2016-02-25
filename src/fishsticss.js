@@ -1,20 +1,18 @@
 // TODO: prevent capturing spaces at the end of a match so we don't use trim() everywhere
-var PATTERNS = {
-  selector: /(.+?){\s*([\S\s]*?)\s*\}/gm,
-  rule: /(.+?):(.+?);*/gm,
-  comment: /\/\*[\S\s]*\*\//gm
-};
+// TODO: add variable support
+var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
+var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
 
 var TAB_CHARACTER = ' ';
 var TAB_SIZE = 2;
 
 var fishsticss = {
 
-  _soak: function(css) {
+  _scrape: function(css) {
 
     var styles = {};
 
-    var match = PATTERNS.selector.exec(css);
+    var match = SELECTOR_PATTERN.exec(css);
     while (match) {
 
       var selector = match[1].trim();
@@ -33,10 +31,13 @@ var fishsticss = {
       if (styles[selector]) {
         styles[selector].rules = Object.assign(styles[selector].rules, rules);
       } else {
-        styles[selector] = {rules: rules};
+        styles[selector] = {
+          index: match.index,
+          rules: rules
+        };
       }
 
-      match = PATTERNS.selector.exec(css);
+      match = SELECTOR_PATTERN.exec(css);
     }
 
     return styles;
@@ -100,9 +101,24 @@ var fishsticss = {
     return styles;
   },
 
-  wash: function(css) {
-    var styles = this._soak(css);
-    return this._rinse(this._scrub(styles));
+  prepare: function(css) {
+
+    var styles = this._rinse(this._scrub(this._scrape(css)));
+
+    var comments = [];
+    var match = COMMENT_PATTERN.exec(css);
+    while (match) {
+      comments.push({
+        index: match.index,
+        text: match[1].trim()
+      });
+      match = COMMENT_PATTERN.exec(css);
+    }
+
+    return {
+      styles: styles,
+      comments: comments
+    };
   },
 
   _tab: function(level, options) {
@@ -111,27 +127,44 @@ var fishsticss = {
     return tabCharacter.repeat(tabSize * level);
   },
 
-  print: function(styles, options) {
+  print: function(styles, comments, options) {
 
     var output = '';
     var level = options && options.level || 0;
 
     for (var selector in styles) {
+
       var style = styles[selector];
-      output += this._tab(level, options);
-      output += selector + ' {\n';
+
+      if (comments && comments.length && comments[0].index < style.index) {
+        if (output.length > 0 && output.charAt(output.length - 1) !== '\n') {
+          output += '\n';
+        }
+        output += this._tab(level, options) + '// ' + comments[0].text + '\n';
+        comments.splice(0, 1);
+      }
+
+      output += this._tab(level, options) + selector + ' {\n';
       for (var property in style.rules) {
         output += this._tab(level + 1, options);
         output += property + ': ' + style.rules[property] + ';\n';
       }
       if (style.children) {
-        output += this.print(style.children, {level: level + 1});
+        output += this.print(style.children, comments, {level: level + 1});
       }
-      output += this._tab(level, options);
-      output += '}\n';
+      output += this._tab(level, options) + '}\n';
+
+      if (!level) {
+        output += '\n';
+      }
     }
 
     return output;
+  },
+
+  parse: function(css) {
+    var results = this.prepare(css);
+    return this.print(results.styles, results.comments);
   }
 };
 
