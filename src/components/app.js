@@ -37,10 +37,9 @@ var App = React.createClass({
         <div className="fs-row">
           <div className="fs-col">
             <textarea className="fs-input"
+                defaultValue={DEFAULT_INPUT}
                 onKeyUp={this._onInputChange}
-                ref="input">
-              {DEFAULT_INPUT}
-            </textarea>
+                ref="input"/>
           </div>
           <div className="fs-col">
             <textarea className="fs-output"
