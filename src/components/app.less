@@ -41,7 +41,11 @@
       position: absolute;
       top: 0;
       left: 0;
+      &:first-child {
+        padding-right: @padding-size / 2;
+      }
       &:last-child {
+        padding-left: @padding-size / 2;
         left: 50%;
       }
 
