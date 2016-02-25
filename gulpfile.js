@@ -2,6 +2,7 @@ var LessPluginAutoPrefix = require('less-plugin-autoprefix');
 var LessPluginCleanCSS = require('less-plugin-clean-css');
 var browserify = require('browserify');
 var browserSync = require('browser-sync').create();
+var del = require('del');
 var gulp = require('gulp');
 var less = require('gulp-less');
 var sourcemaps = require('gulp-sourcemaps');
@@ -96,6 +97,10 @@ gulp.task('dev', gulp.parallel('dev-serve', 'dev-watch'));
  * distribution/deployment.
  */
 
+gulp.task('dist-clean', function() {
+  return del(BUILD_DIR + '**/*');
+});
+
 gulp.task('dist-markup', function() {
   return gulp.src(SRC_DIR + 'index.html').pipe(gulp.dest(BUILD_DIR));
 });
@@ -109,7 +114,7 @@ gulp.task('dist-scripts', function() {
 });
 
 gulp.task('dist-styles', function() {
-  gulp.src(SRC_DIR + 'main.less')
+  return gulp.src(SRC_DIR + 'main.less')
       .pipe(less({
         relativeUrls: true,
         plugins: [new LessPluginAutoPrefix(), new LessPluginCleanCSS()]
@@ -123,12 +128,14 @@ gulp.task('dist-styles', function() {
 
 gulp.task('dist-assets', function() {
   return gulp.src(SRC_DIR + '**/assets/**')
-      .pipe(gulp.dest(BUILD_DIR + 'assets/'));
+      .pipe(gulp.dest(BUILD_DIR));
 });
 
-gulp.task('dist', gulp.parallel([
+gulp.task('dist-build', gulp.parallel([
   'dist-markup',
   'dist-scripts',
   'dist-styles',
   'dist-assets'
 ]));
+
+gulp.task('dist', gulp.series('dist-clean', 'dist-build'));
