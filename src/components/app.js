@@ -5,18 +5,22 @@ var fishsticss = require('../fishsticss');
 var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
     '#id {\n' +
     '\twidth: 100%;\n' +
+    '\tcolor: #333;\n' +
     '}\n' +
     '#id {\n' +
     '\theight: 100%;\n' +
     '}\n' +
     '#id .class {\n' +
     '\theight: 100%;\n' +
+    '\tbackground-color: #ff0000;\n' +
     '}\n' +
+    '/* A comment before a child class */\n' +
     '#id .class .child-class {\n' +
-    '\theight: 100%;\n' +
+    '\tmargin-top: 24px;\n' +
     '}\n' +
+    '/* A comment before a sub class */\n' +
     '#id .class.sub-class {\n' +
-    '\theight: 100%;\n' +
+    '\tcolor: #ff0000;\n' +
     '}';
 
 var App = React.createClass({
