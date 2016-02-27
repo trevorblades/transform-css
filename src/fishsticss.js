@@ -24,7 +24,9 @@ var fishsticss = {
         var rule = b.split(':').filter(function(rule) {
           return rule;
         });
-        a[rule[0].trim()] = rule[1].trim();
+        if (rule.length > 1) {
+          a[rule[0].trim()] = rule[1].trim();
+        }
         return a;
       }, {});
 
