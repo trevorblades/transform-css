@@ -145,12 +145,21 @@ var fishsticss = {
       var style = styles[selector];
 
       // Print the comments
-      if (comments && comments.length && comments[0].index < style.index) {
-        if (output.length > 0 && output.charAt(output.length - 1) !== '\n') {
-          output += '\n';
+      if (comments && comments.length) {
+        var commentIndex = -1;
+        for (var i = 0; i < comments.length; i++) {
+          if (comments[i].index < style.index) {
+            commentIndex = i;
+          }
         }
-        output += this._tab(level, options) + '// ' + comments[0].text + '\n';
-        comments.splice(0, 1);
+        if (commentIndex > -1) {
+          if (output.length > 0 && output.charAt(output.length - 1) !== '\n') {
+            output += '\n';
+          }
+          output += this._tab(level, options) + '// ' +
+              comments[commentIndex].text + '\n';
+          comments.splice(commentIndex, 1);
+        }
       }
 
       // Print the styles
