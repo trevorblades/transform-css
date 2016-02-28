@@ -89,7 +89,9 @@ var App = React.createClass({
                 ref="input"/>
           </div>
           <div className="fs-col">
-            <label htmlFor="fs-output">{this.state.format.toUpperCase() + ' output'}</label>
+            <label htmlFor="fs-output">
+              {LANGUAGES[this.state.languageIndex].toUpperCase() + ' output'}
+            </label>
             <textarea id="fs-output"
                 onClick={this._onOutputClick}
                 readOnly
