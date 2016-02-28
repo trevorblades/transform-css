@@ -31,7 +31,7 @@ var fishsticss = {
           var colorMatch = COLOR_PATTERN.exec(value);
           if (colorMatch) {
 
-            var color = '#' + colorMatch[1];
+            var color = colorMatch[1] ? '#' + colorMatch[1] : null;
 
             // If the color is rgb or hsl, format it properly
             if (!color) {
