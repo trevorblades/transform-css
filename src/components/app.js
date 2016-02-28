@@ -1,8 +1,10 @@
 var React = require('react');
 
+var Dropdown = require('./dropdown');
 var Toggle = require('./toggle');
 var fishsticss = require('../fishsticss');
 
+var LANGUAGES = ['less', 'sass', 'scss'];
 var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
     '#id {\n' +
     '\twidth: 100%;\n' +
@@ -34,16 +36,22 @@ var App = React.createClass({
       format: 'less',
       includeComments: true,
       input: DEFAULT_INPUT,
+      languageIndex: 0,
       useTabs: false
     };
   },
 
   componentWillUpdate: function(nextProps, nextState) {
     this._output = fishsticss.parse(nextState.input, {
+      language: LANGUAGES[nextState.languageIndex],
       createVariables: nextState.createVariables,
       includeComments: nextState.includeComments,
       useTabs: nextState.useTabs
     });
+  },
+
+  _onLanguageClick: function(nextIndex) {
+    this.setState({languageIndex: nextIndex});
   },
 
   _onCommentsToggle: function() {
@@ -72,17 +80,6 @@ var App = React.createClass({
         <div className="fs-header">
           <h1>Fishsticss</h1>
         </div>
-        <div className="fs-subheader">
-          <Toggle isToggled={this.state.includeComments}
-              label="Comments"
-              onToggle={this._onCommentsToggle}/>
-          <Toggle isToggled={this.state.createVariables}
-              label="Color variables"
-              onToggle={this._onVariablesToggle}/>
-          <Toggle isToggled={!this.state.useTabs}
-              label={['Tabs', 'Spaces']}
-              onToggle={this._onTabsToggle}/>
-        </div>
         <div className="fs-row">
           <div className="fs-col">
             <label htmlFor="fs-input">CSS input</label>
@@ -99,6 +96,20 @@ var App = React.createClass({
                 ref="output"
                 value={this._output}/>
           </div>
+        </div>
+        <div className="fs-subheader">
+          <Dropdown items={LANGUAGES}
+              onItemClick={this._onLanguageClick}
+              selectedIndex={this.state.languageIndex}/>
+          <Toggle isToggled={this.state.includeComments}
+              label="Comments"
+              onToggle={this._onCommentsToggle}/>
+          <Toggle isToggled={this.state.createVariables}
+              label="Color variables"
+              onToggle={this._onVariablesToggle}/>
+          <Toggle isToggled={!this.state.useTabs}
+              label={['Tabs', 'Spaces']}
+              onToggle={this._onTabsToggle}/>
         </div>
       </div>
     );

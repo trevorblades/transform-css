@@ -1,4 +1,5 @@
 @import (reference) '../variables';
+@import './dropdown';
 @import './toggle';
 
 @padding-size: 20px;
@@ -38,13 +39,17 @@
   .fs-subheader {
     width: 100%;
     height: @subheader-height;
-    padding: @padding-size * 0.6 @padding-size;
+    padding: 0 @padding-size;
+    box-shadow: 0 1px 0 @gray-lighter;
     background-color: @gray-lightest;
     position: absolute;
     top: @header-height;
     left: 0;
-    .fs-toggle {
+    .fs-dropdown, .fs-toggle {
       margin-right: @subheader-height;
+    }
+    .fs-toggle {
+      margin-top: @padding-size * 0.6;
       &:last-child {
         margin-right: 0;
         float: right;

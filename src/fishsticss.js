@@ -183,13 +183,14 @@ var fishsticss = {
 
     var output = '';
     var level = options && options.level || 0;
+    var variableSymbol = !options || options.language === 'less' ? '@' : '$';
 
     if (colors && colors.length && start) {
       if (!options || options.includeComments) {
         output += '// Color variables\n'
       }
       colors.forEach(function(color, index) {
-        output += '@var' + (index + 1) + ': ' + color + ';\n';
+        output += variableSymbol + 'var' + (index + 1) + ': ' + color + ';\n';
       });
       output += '\n';
     }
@@ -217,7 +218,11 @@ var fishsticss = {
       }
 
       // Print the styles
-      output += this._indent(level, options) + selector + ' {\n';
+      output += this._indent(level, options) + selector;
+      if (!options || options.language !== 'sass') {
+        output += ' {';
+      }
+      output += '\n';
       for (var property in style.rules) {
 
         output += this._indent(level + 1, options);
@@ -225,14 +230,18 @@ var fishsticss = {
 
         var colorIndex = !colors ? -1 : colors.indexOf(style.rules[property]);
         output += colorIndex > -1 ?
-            '@var' + (colorIndex + 1) : style.rules[property];
+            variableSymbol + 'var' + (colorIndex + 1) : style.rules[property];
         output += ';\n';
       }
       if (style.children) {
         output += this.print(style.children, colors, comments,
             Object.assign(options || {}, {level: level + 1}));
       }
-      output += this._indent(level, options) + '}\n';
+      output += this._indent(level, options);
+      if (!options || options.language !== 'sass') {
+        output += ' {';
+      }
+      output += '\n';
 
       if (!level) {
         output += '\n';
@@ -245,6 +254,7 @@ var fishsticss = {
   parse: function(css, options) {
 
     // Options include...
+    // language [string] Accepts 'less', 'sass', and 'scss' (default is 'less')
     // createVariables [bool] Whether or not color variables are created
     // includeComments [bool] Whether or not comments are included
     // useTabs [bool] If you prefer to use tabs rather than spaces
