@@ -1,6 +1,6 @@
 @import (reference) '../variables';
 
-@dropdown-height: 48px;
+@dropdown-height: 36px;
 
 .fs-dropdown {
   display: inline-block;
@@ -8,24 +8,22 @@
   height: @dropdown-height;
   cursor: pointer;
   user-select: none;
-  overflow: hidden;
   position: relative;
-  &.fs-open {
-    overflow: visible;
-    .fs-dropdown-items {
-      opacity: 1;
-      visibility: visible;
-      transform: scale(1);
-    }
+  &.fs-open .fs-dropdown-items {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
   }
 
   .fs-dropdown-dummy, .fs-dropdown-item {
-    padding: 0 @dropdown-height / 2;
+    padding: 0 @dropdown-height / 1.5;
     font-size: 14px;
     line-height: @dropdown-height;
     text-transform: uppercase;
   }
   .fs-dropdown-dummy {
+    box-shadow: @box-shadow-large;
+    border-radius: @border-radius-small;
     background-color: @brand-action;
     color: @gray-lightest;
   }
@@ -44,7 +42,7 @@
         visibility @transition-duration-fast ease-in-out,
         transform @transition-duration-fast ease-in-out;
     .fs-dropdown-item {
-      padding: 2px @dropdown-height / 2 + 2px;
+      padding: 2px @dropdown-height / 1.5 + 2px;
       background-color: @gray-lightest;
       &:nth-child(2n) {
         background-color: mix(@gray-lightest, @gray-lighter);

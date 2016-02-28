@@ -20,8 +20,8 @@
     height: @header-height;
     padding: @padding-size;
     border-bottom: 1px solid @gray-lighter;
-    background-image: url('../assets/fish.jpg');
-    background-size: 640px;
+    background-image: url('../assets/fish.png');
+    background-size: 540px 120px;
     background-position: right 42%;
     background-repeat: no-repeat;
     position: absolute;
@@ -46,14 +46,12 @@
     top: @header-height;
     left: 0;
     .fs-dropdown, .fs-toggle {
+      margin-top: 6px;
       margin-right: @subheader-height;
     }
-    .fs-toggle {
-      margin-top: @padding-size * 0.6;
-      &:last-child {
-        margin-right: 0;
-        float: right;
-      }
+    .fs-toggle:last-child {
+      margin-right: 0;
+      float: right;
     }
   }
   .fs-row {
