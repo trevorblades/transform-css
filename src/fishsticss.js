@@ -1,4 +1,4 @@
-// TODO: prevent capturing spaces at the end of a match so we don't use trim() everywhere
+// TODO: prevent capturing spaces at the end of a match so we don't need to use trim() everywhere
 var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
 var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
 var COLOR_PATTERN = /^(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gm;
@@ -18,7 +18,7 @@ var fishsticss = {
 
       var selector = match[1].trim();
 
-      // Split apart style properties
+      // Split apart the style properties
       // TODO: use a fat arrow function for this filter
       var rules = match[2].trim().split(';').filter(function(rule) {
         return rule;
@@ -242,6 +242,13 @@ var fishsticss = {
   },
 
   parse: function(css, options) {
+
+    // Options include...
+    // createVariables [bool] Whether or not color variables are created
+    // includeComments [bool] Whether or not comments are included
+    // tabCharacter [string] Either 'tab' or 'space'
+    // tabSize [number] The amount of the above character that we print
+
     var results = this.prepare(css);
     return this.print(results.styles, results.colors, results.comments, options, true);
   }
