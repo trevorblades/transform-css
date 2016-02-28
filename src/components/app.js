@@ -27,12 +27,23 @@ var App = React.createClass({
 
   getInitialState: function() {
     return {
-      output: fishsticss.parse(DEFAULT_INPUT)
+      createVariables: true,
+      includeComments: true,
+      output: fishsticss.parse(DEFAULT_INPUT),
+      indentSize: 2,
+      useTabs: false
     };
   },
 
   _onInputChange: function() {
-    this.setState({output: fishsticss.parse(this.refs.input.value)});
+    this.setState({
+      output: fishsticss.parse(this.refs.input.value, {
+        createVariables: this.state.createVariables,
+        includeComments: this.state.includeComments,
+        indentSize: this.state.indentSize,
+        useTabs: this.state.useTabs
+      })
+    });
   },
 
   _onOutputClick: function() {
