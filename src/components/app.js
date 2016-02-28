@@ -113,6 +113,16 @@ var App = React.createClass({
               label={['Tabs', 'Spaces']}
               onToggle={this._onTabsToggle}/>
         </div>
+        <div className="fs-footer">
+          <span>A project by </span>
+          <a href="https://twitter.com/trevorblades" target="_blank">Trevor Blades</a>
+          <div className="fs-float-right">
+            <span>See a bug? Want to contribute? Fishsticss on </span>
+            <a href="https://github.com/trevorblades/fishsticss" target="_blank">GitHub</a>
+            <span> and </span>
+            <a href="https://twitter.com/fishsticss" target="_blank">Twitter</a>
+          </div>
+        </div>
       </div>
     );
   }

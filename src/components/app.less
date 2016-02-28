@@ -5,6 +5,7 @@
 @padding-size: 20px;
 @header-height: 60px;
 @subheader-height: 48px;
+@footer-height: 32px;
 
 .fs-app {
   width: 100%;
@@ -58,7 +59,8 @@
     width: 100%;
     position: absolute;
     top: @header-height + @subheader-height;
-    bottom: 0;
+    left: 0;
+    bottom: @footer-height;
     .fs-col {
       width: 50%;
       height: 100%;
@@ -105,5 +107,15 @@
         cursor: pointer;
       }
     }
+  }
+  .fs-footer {
+    width: 100%;
+    height: @footer-height;
+    padding: 0 @padding-size @padding-size;
+    font-size: 12px;
+    line-height: @footer-height - @padding-size;
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 }
