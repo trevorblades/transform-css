@@ -186,6 +186,9 @@ var fishsticss = {
     var level = options && options.level || 0;
 
     if (colors && colors.length && start) {
+      if (!options || options.includeComments) {
+        output += '// Color variables\n'
+      }
       colors.forEach(function(color, index) {
         output += '@var' + (index + 1) + ': ' + color + ';\n';
       });
