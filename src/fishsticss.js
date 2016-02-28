@@ -86,7 +86,8 @@ var fishsticss = {
     // Move subclasses to the top of the list of children
     var selectors = Object.keys(styles).reverse();
     for (var i = selectors.length - 1; i >= 0; i--) {
-      var nextIndex = selectors[i].indexOf('&') === 0 ? 0 : selectors.length - 1;
+      var nextIndex = selectors[i].indexOf('&') === 0 ?
+          0 : selectors.length - 1;
       selectors.splice(nextIndex, 0, selectors.splice(i, 1)[0]);
     }
 
@@ -187,7 +188,7 @@ var fishsticss = {
     var output = '';
     var level = options && options.level || 0;
 
-    if (start) {
+    if (colors && colors.length && start) {
       colors.forEach(function(color, index) {
         output += '@var' + (index + 1) + ': ' + color + ';\n';
       });
@@ -229,7 +230,8 @@ var fishsticss = {
         output += ';\n';
       }
       if (style.children) {
-        output += this.print(style.children, colors, comments, {level: level + 1});
+        output += this.print(style.children, colors, comments,
+            Object.assign(options || {}, {level: level + 1}));
       }
       output += this._tab(level, options) + '}\n';
 
@@ -250,7 +252,11 @@ var fishsticss = {
     // tabSize [number] The amount of the above character that we print
 
     var results = this.prepare(css);
-    return this.print(results.styles, results.colors, results.comments, options, true);
+    return this.print(results.styles,
+        options && !options.createVariables ? null : results.colors,
+        options && !options.includeComments ? null : results.comments,
+        options,
+        true);
   }
 };
 
