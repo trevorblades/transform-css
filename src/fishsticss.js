@@ -239,7 +239,7 @@ var fishsticss = {
       }
       output += this._indent(level, options);
       if (!options || options.language !== 'sass') {
-        output += ' {';
+        output += '}';
       }
       output += '\n';
 
