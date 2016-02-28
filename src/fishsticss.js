@@ -1,7 +1,7 @@
 // TODO: prevent capturing spaces at the end of a match so we don't use trim() everywhere
-// TODO: add variable support
 var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
 var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
+var COLOR_PATTERN = /^(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gm;
 
 var TAB_CHARACTER = ' ';
 var TAB_SIZE = 2;
@@ -11,12 +11,14 @@ var fishsticss = {
   _scrape: function(css) {
 
     var styles = {};
+    var colors = {};
 
     var match = SELECTOR_PATTERN.exec(css);
     while (match) {
 
       var selector = match[1].trim();
 
+      // Split apart style properties
       // TODO: use a fat arrow function for this filter
       var rules = match[2].trim().split(';').filter(function(rule) {
         return rule;
@@ -25,11 +27,42 @@ var fishsticss = {
           return rule;
         });
         if (rule.length > 1) {
-          a[rule[0].trim()] = rule[1].trim();
+
+          var value = rule[1].trim();
+
+          // Check if the value is a color (hex, rgb, or hsl)
+          var colorMatch = COLOR_PATTERN.exec(value);
+          if (colorMatch) {
+
+            var color = '#' + colorMatch[1];
+
+            // If the color is rgb or hsl, format it properly
+            if (!color) {
+              var colorValues = [
+                colorMatch[3],
+                colorMatch[4],
+                colorMatch[5]
+              ];
+              if (colorMatch[6]) {
+                colorValues.push(colorMatch[6]);
+              }
+              color = colorMatch[2] + '(' + colorValues.join(', ') + ')';
+            }
+
+            // Increment count for the color
+            if (!colors[color]) {
+              colors[color] = 0;
+            }
+            colors[color] += 1;
+            value = color;
+          }
+
+          a[rule[0].trim()] = value;
         }
         return a;
       }, {});
 
+      // Assign styles to the selector or define a new selector
       if (styles[selector]) {
         styles[selector].rules = Object.assign(styles[selector].rules, rules);
       } else {
@@ -42,7 +75,27 @@ var fishsticss = {
       match = SELECTOR_PATTERN.exec(css);
     }
 
-    return styles;
+    return {
+      styles: styles,
+      colors: colors
+    };
+  },
+
+  _sort: function(styles) {
+
+    // Move subclasses to the top of the list of children
+    var selectors = Object.keys(styles).reverse();
+    for (var i = selectors.length - 1; i >= 0; i--) {
+      var nextIndex = selectors[i].indexOf('&') === 0 ? 0 : selectors.length - 1;
+      selectors.splice(nextIndex, 0, selectors.splice(i, 1)[0]);
+    }
+
+    var sorted = {};
+    selectors.forEach(function(selector) {
+      sorted[selector] = styles[selector];
+    });
+
+    return sorted;
   },
 
   _scrub: function(styles) {
@@ -82,23 +135,6 @@ var fishsticss = {
     return styles;
   },
 
-  _sort: function(styles) {
-
-    // Move subclasses to the top of the list of children
-    var selectors = Object.keys(styles).reverse();
-    for (var i = selectors.length - 1; i >= 0; i--) {
-      var nextIndex = selectors[i].indexOf('&') === 0 ? 0 : selectors.length - 1;
-      selectors.splice(nextIndex, 0, selectors.splice(i, 1)[0]);
-    }
-
-    var sorted = {};
-    selectors.forEach(function(selector) {
-      sorted[selector] = styles[selector];
-    });
-
-    return sorted;
-  },
-
   _rinse: function(styles) {
     for (var key in styles) {
       if (styles[key].nested) {
@@ -110,7 +146,17 @@ var fishsticss = {
 
   prepare: function(css) {
 
-    var styles = this._rinse(this._scrub(this._scrape(css)));
+    // Scrape the CSS for styles and colors
+    var scrapings = this._scrape(css);
+    var styles = this._rinse(this._scrub(scrapings.styles));
+    var colors = [];
+
+    // Create array of colors that occur more than once
+    for (var color in scrapings.colors) {
+      if (scrapings.colors[color] > 1) {
+        colors.push(color);
+      }
+    }
 
     // Get the comments
     var comments = [];
@@ -125,6 +171,7 @@ var fishsticss = {
 
     return {
       styles: styles,
+      colors: colors,
       comments: comments
     };
   },
@@ -135,10 +182,17 @@ var fishsticss = {
     return tabCharacter.repeat(tabSize * level);
   },
 
-  print: function(styles, comments, options) {
+  print: function(styles, colors, comments, options, start) {
 
     var output = '';
     var level = options && options.level || 0;
+
+    if (start) {
+      colors.forEach(function(color, index) {
+        output += '@var' + (index + 1) + ': ' + color + ';\n';
+      });
+      output += '\n';
+    }
 
     for (var selector in styles) {
 
@@ -165,11 +219,17 @@ var fishsticss = {
       // Print the styles
       output += this._tab(level, options) + selector + ' {\n';
       for (var property in style.rules) {
+
         output += this._tab(level + 1, options);
-        output += property + ': ' + style.rules[property] + ';\n';
+        output += property + ': ';
+
+        var colorIndex = colors.indexOf(style.rules[property]);
+        output += colorIndex > -1 ?
+            '@var' + (colorIndex + 1) : style.rules[property];
+        output += ';\n';
       }
       if (style.children) {
-        output += this.print(style.children, comments, {level: level + 1});
+        output += this.print(style.children, colors, comments, {level: level + 1});
       }
       output += this._tab(level, options) + '}\n';
 
@@ -181,9 +241,9 @@ var fishsticss = {
     return output;
   },
 
-  parse: function(css) {
+  parse: function(css, options) {
     var results = this.prepare(css);
-    return this.print(results.styles, results.comments);
+    return this.print(results.styles, results.colors, results.comments, options, true);
   }
 };
 
