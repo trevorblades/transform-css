@@ -16,7 +16,7 @@ var fishsticss = {
       var selector = match[1].trim();
 
       // Split apart the style properties
-      // TODO: use a fat arrow function for this filter
+      // TODO: use a fat arrow function for this filter?
       var rules = match[2].trim().split(';').filter(function(rule) {
         return rule;
       }).reduce(function(a, b) {
