@@ -175,9 +175,8 @@ var fishsticss = {
   },
 
   _indent: function(level, options) {
-    var indentSize = options && options.indentSize || 2;
-    var indentCharacter = options && options.useTabs ? '\t' : ' ';
-    return indentCharacter.repeat(indentSize * level);
+    var useTabs = options && options.useTabs;
+    return (useTabs ? '\t' : ' ').repeat((useTabs ? 1 : 2) * level);
   },
 
   print: function(styles, colors, comments, options, start) {
@@ -224,7 +223,7 @@ var fishsticss = {
         output += this._indent(level + 1, options);
         output += property + ': ';
 
-        var colorIndex = colors.indexOf(style.rules[property]);
+        var colorIndex = !colors ? -1 : colors.indexOf(style.rules[property]);
         output += colorIndex > -1 ?
             '@var' + (colorIndex + 1) : style.rules[property];
         output += ';\n';
@@ -248,7 +247,6 @@ var fishsticss = {
     // Options include...
     // createVariables [bool] Whether or not color variables are created
     // includeComments [bool] Whether or not comments are included
-    // indentSize [number] The amount of indents we make per level
     // useTabs [bool] If you prefer to use tabs rather than spaces
 
     var results = this.prepare(css);

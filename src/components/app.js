@@ -26,30 +26,40 @@ var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
 
 var App = React.createClass({
 
+  _output: fishsticss.parse(DEFAULT_INPUT),
+
   getInitialState: function() {
     return {
       createVariables: true,
       format: 'less',
       includeComments: true,
-      output: fishsticss.parse(DEFAULT_INPUT),
-      indentSize: 2,
+      input: DEFAULT_INPUT,
       useTabs: false
     };
+  },
+
+  componentWillUpdate: function(nextProps, nextState) {
+    this._output = fishsticss.parse(nextState.input, {
+      createVariables: nextState.createVariables,
+      includeComments: nextState.includeComments,
+      useTabs: nextState.useTabs
+    });
   },
 
   _onCommentsToggle: function() {
     this.setState({includeComments: !this.state.includeComments});
   },
 
+  _onVariablesToggle: function() {
+    this.setState({createVariables: !this.state.createVariables});
+  },
+
+  _onTabsToggle: function() {
+    this.setState({useTabs: !this.state.useTabs});
+  },
+
   _onInputChange: function() {
-    this.setState({
-      output: fishsticss.parse(this.refs.input.value, {
-        createVariables: this.state.createVariables,
-        includeComments: this.state.includeComments,
-        indentSize: this.state.indentSize,
-        useTabs: this.state.useTabs
-      })
-    });
+    this.setState({input: this.refs.input.value});
   },
 
   _onOutputClick: function() {
@@ -66,6 +76,12 @@ var App = React.createClass({
           <Toggle isToggled={this.state.includeComments}
               label="Comments"
               onToggle={this._onCommentsToggle}/>
+          <Toggle isToggled={this.state.createVariables}
+              label="Color variables"
+              onToggle={this._onVariablesToggle}/>
+          <Toggle isToggled={!this.state.useTabs}
+              label={['Tabs', 'Spaces']}
+              onToggle={this._onTabsToggle}/>
         </div>
         <div className="fs-row">
           <div className="fs-col">
@@ -81,7 +97,7 @@ var App = React.createClass({
                 onClick={this._onOutputClick}
                 readOnly
                 ref="output"
-                value={this.state.output}/>
+                value={this._output}/>
           </div>
         </div>
       </div>
