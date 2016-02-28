@@ -1,5 +1,6 @@
 var React = require('react');
 
+var Toggle = require('./toggle');
 var fishsticss = require('../fishsticss');
 
 var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
@@ -28,11 +29,16 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       createVariables: true,
+      format: 'less',
       includeComments: true,
       output: fishsticss.parse(DEFAULT_INPUT),
       indentSize: 2,
       useTabs: false
     };
+  },
+
+  _onCommentsToggle: function() {
+    this.setState({includeComments: !this.state.includeComments});
   },
 
   _onInputChange: function() {
@@ -56,15 +62,22 @@ var App = React.createClass({
         <div className="fs-header">
           <h1>Fishsticss</h1>
         </div>
+        <div className="fs-subheader">
+          <Toggle isToggled={this.state.includeComments}
+              label="Comments"
+              onToggle={this._onCommentsToggle}/>
+        </div>
         <div className="fs-row">
           <div className="fs-col">
-            <textarea className="fs-input"
-                defaultValue={DEFAULT_INPUT}
+            <label htmlFor="fs-input">CSS input</label>
+            <textarea defaultValue={DEFAULT_INPUT}
+                id="fs-input"
                 onKeyUp={this._onInputChange}
                 ref="input"/>
           </div>
           <div className="fs-col">
-            <textarea className="fs-output"
+            <label htmlFor="fs-output">{this.state.format.toUpperCase() + ' output'}</label>
+            <textarea id="fs-output"
                 onClick={this._onOutputClick}
                 readOnly
                 ref="output"
