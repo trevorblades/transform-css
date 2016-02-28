@@ -3,9 +3,6 @@ var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
 var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
 var COLOR_PATTERN = /^(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gm;
 
-var TAB_CHARACTER = ' ';
-var TAB_SIZE = 2;
-
 var fishsticss = {
 
   _scrape: function(css) {
@@ -177,10 +174,10 @@ var fishsticss = {
     };
   },
 
-  _tab: function(level, options) {
-    var tabCharacter = options && options.tabCharacter || TAB_CHARACTER;
-    var tabSize = options && options.tabSize || TAB_SIZE;
-    return tabCharacter.repeat(tabSize * level);
+  _indent: function(level, options) {
+    var indentSize = options && options.indentSize || 2;
+    var indentCharacter = options && options.useTabs ? '\t' : ' ';
+    return indentCharacter.repeat(indentSize * level);
   },
 
   print: function(styles, colors, comments, options, start) {
@@ -211,17 +208,17 @@ var fishsticss = {
           if (output.length > 0 && output.charAt(output.length - 1) !== '\n') {
             output += '\n';
           }
-          output += this._tab(level, options) + '// ' +
+          output += this._indent(level, options) + '// ' +
               comments[commentIndex].text + '\n';
           comments.splice(commentIndex, 1);
         }
       }
 
       // Print the styles
-      output += this._tab(level, options) + selector + ' {\n';
+      output += this._indent(level, options) + selector + ' {\n';
       for (var property in style.rules) {
 
-        output += this._tab(level + 1, options);
+        output += this._indent(level + 1, options);
         output += property + ': ';
 
         var colorIndex = colors.indexOf(style.rules[property]);
@@ -233,7 +230,7 @@ var fishsticss = {
         output += this.print(style.children, colors, comments,
             Object.assign(options || {}, {level: level + 1}));
       }
-      output += this._tab(level, options) + '}\n';
+      output += this._indent(level, options) + '}\n';
 
       if (!level) {
         output += '\n';
@@ -248,8 +245,8 @@ var fishsticss = {
     // Options include...
     // createVariables [bool] Whether or not color variables are created
     // includeComments [bool] Whether or not comments are included
-    // tabCharacter [string] Either 'tab' or 'space'
-    // tabSize [number] The amount of the above character that we print
+    // indentSize [number] The amount of indents we make per level
+    // useTabs [bool] If you prefer to use tabs rather than spaces
 
     var results = this.prepare(css);
     return this.print(results.styles,
