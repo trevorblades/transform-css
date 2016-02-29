@@ -15,7 +15,7 @@ var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
     '}\n' +
     '#id .class {\n' +
     '\theight: 100%;\n' +
-    '\tbackground-color: #ff0000;\n' +
+    '\tborder: 1px solid #ff0000;\n' +
     '}\n' +
     '/* A comment before a child class */\n' +
     '#id .class .child-class {\n' +

@@ -3,7 +3,7 @@ var Color = require('color');
 // TODO: prevent capturing spaces at the end of a match so we don't need to use trim() everywhere
 var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
 var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
-var COLOR_PATTERN = /^(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gim;
+var COLOR_PATTERN = /(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gim;
 
 var fishsticss = {
 
@@ -32,11 +32,12 @@ var fishsticss = {
           var value = rule[1].trim();
 
           // Check if the value is a color (hex, rgb, or hsl)
-          if (value.search(COLOR_PATTERN) > -1) {
+          var colorMatch = COLOR_PATTERN.exec(value);
+          if (colorMatch) {
 
             // Format the color appropriately
             // TODO: make color formatting optional
-            var color = new Color(value);
+            var color = new Color(colorMatch[0]);
             var colorString = color.alpha() === 1 ?
                 color.hexString().toLowerCase() : color.rgbString();
 
@@ -45,7 +46,7 @@ var fishsticss = {
               colors[colorString] = 0;
             }
             colors[colorString] += 1;
-            value = colorString;
+            value = value.replace(colorMatch[0], colorString);
           }
 
           a[rule[0].trim()] = value;
@@ -223,9 +224,15 @@ var fishsticss = {
         output += this._indent(level + 1, options);
         output += property + ': ';
 
-        var colorIndex = !colors ? -1 : colors.indexOf(style.rules[property]);
-        output += colorIndex > -1 ?
-            variableSymbol + 'var' + (colorIndex + 1) : style.rules[property];
+        var colorIndex = !colors ? -1 : colors.findIndex(function(color) {
+          return style.rules[property].indexOf(color) > -1;
+        });
+        if (colorIndex > -1) {
+          output += style.rules[property].replace(colors[colorIndex],
+              variableSymbol + 'var' + (colorIndex + 1));
+        } else {
+          output += style.rules[property];
+        }
         output += ';\n';
       }
       if (style.children) {
