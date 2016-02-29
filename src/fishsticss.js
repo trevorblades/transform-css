@@ -184,7 +184,8 @@ var fishsticss = {
 
     var output = '';
     var level = options && options.level || 0;
-    var variableSymbol = !options || options.language === 'less' ? '@' : '$';
+    var variableSymbol = options &&
+        options.language && options.language.search(/s[ac]ss/) > -1 ? '$' : '@';
 
     if (colors && colors.length && start) {
       if (!options || options.includeComments) {
