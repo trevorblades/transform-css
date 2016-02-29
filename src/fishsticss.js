@@ -1,3 +1,5 @@
+var Color = require('color');
+
 // TODO: prevent capturing spaces at the end of a match so we don't need to use trim() everywhere
 var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
 var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
@@ -10,6 +12,7 @@ var fishsticss = {
     var styles = {};
     var colors = {};
 
+    // TODO: use css.match(SELECTOR_PATTERN) instead
     var match = SELECTOR_PATTERN.exec(css);
     while (match) {
 
@@ -20,6 +23,7 @@ var fishsticss = {
       var rules = match[2].trim().split(';').filter(function(rule) {
         return rule;
       }).reduce(function(a, b) {
+
         var rule = b.split(':').filter(function(rule) {
           return rule;
         });
@@ -28,31 +32,18 @@ var fishsticss = {
           var value = rule[1].trim();
 
           // Check if the value is a color (hex, rgb, or hsl)
-          var colorMatch = COLOR_PATTERN.exec(value);
-          if (colorMatch) {
+          if (value.search(COLOR_PATTERN) > -1) {
 
-            var color = colorMatch[1] ?
-                '#' + colorMatch[1].toLowerCase() : null;
-
-            // If the color is rgb or hsl, format it properly
-            if (!color) {
-              var colorValues = [
-                colorMatch[3],
-                colorMatch[4],
-                colorMatch[5]
-              ];
-              if (colorMatch[6]) {
-                colorValues.push(colorMatch[6]);
-              }
-              color = colorMatch[2] + '(' + colorValues.join(', ') + ')';
-            }
+            var color = new Color(value);
+            var colorString = color.alpha() === 1 ?
+                color.hexString().toLowerCase() : color.rgbString();
 
             // Increment count for the color
-            if (!colors[color]) {
-              colors[color] = 0;
+            if (!colors[colorString]) {
+              colors[colorString] = 0;
             }
-            colors[color] += 1;
-            value = color;
+            colors[colorString] += 1;
+            value = colorString;
           }
 
           a[rule[0].trim()] = value;
