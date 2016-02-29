@@ -1,7 +1,7 @@
 // TODO: prevent capturing spaces at the end of a match so we don't need to use trim() everywhere
 var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
 var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
-var COLOR_PATTERN = /^(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gm;
+var COLOR_PATTERN = /^(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gim;
 
 var fishsticss = {
 
@@ -31,7 +31,8 @@ var fishsticss = {
           var colorMatch = COLOR_PATTERN.exec(value);
           if (colorMatch) {
 
-            var color = colorMatch[1] ? '#' + colorMatch[1] : null;
+            var color = colorMatch[1] ?
+                '#' + colorMatch[1].toLowerCase() : null;
 
             // If the color is rgb or hsl, format it properly
             if (!color) {
