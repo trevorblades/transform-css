@@ -34,6 +34,8 @@ var fishsticss = {
           // Check if the value is a color (hex, rgb, or hsl)
           if (value.search(COLOR_PATTERN) > -1) {
 
+            // Format the color appropriately
+            // TODO: make color formatting optional
             var color = new Color(value);
             var colorString = color.alpha() === 1 ?
                 color.hexString().toLowerCase() : color.rgbString();
