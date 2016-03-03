@@ -1,0 +1,58 @@
+@import (reference) '../variables';
+
+@toggle-height: 36px;
+@toggle-control-height: 24px;
+
+.fs-toggle {
+  display: inline-block;
+  vertical-align: top;
+  height: @toggle-height;
+  padding: (@toggle-height - @toggle-control-height) / 2 0;
+  cursor: pointer;
+  user-select: none;
+  &.fs-toggled .fs-toggle-control {
+    background-color: @brand-primary;
+    .fs-toggle-control-handle {
+      background-color: @brand-action;
+      transform: translate(75%, -50%);
+    }
+  }
+
+  .fs-toggle-control, .fs-toggle-label {
+    display: inline-block;
+    vertical-align: top;
+  }
+  .fs-toggle-control {
+    width: @toggle-control-height * 1.75;
+    height: @toggle-control-height / 1.5;
+    margin: @toggle-control-height / 6 0;
+    border-radius: @toggle-control-height / 3;
+    box-shadow: inset 0 0 3px fade(black, 50%);
+    background-color: @gray;
+    position: relative;
+    transition: background-color @transition-duration-fast ease-in-out;
+    .fs-toggle-control-handle {
+      width: @toggle-control-height;
+      height: @toggle-control-height;
+      border-radius: 50%;
+      box-shadow: @box-shadow-small;
+      background-color: white;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      transition: background-color @transition-duration-fast ease-in-out,
+          transform @transition-duration-fast ease-in-out;
+    }
+  }
+  .fs-toggle-label {
+    margin-right: @toggle-control-height / 2;
+    font-size: 14px;
+    line-height: @toggle-control-height;
+    color: @gray-dark;
+    &:last-child {
+      margin-right: 0;
+      margin-left: @toggle-control-height / 2;
+    }
+  }
+}

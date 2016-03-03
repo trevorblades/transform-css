@@ -1,33 +1,60 @@
-// TODO: prevent capturing spaces at the end of a match so we don't use trim() everywhere
-// TODO: add variable support
+var Color = require('color');
+
+// TODO: prevent capturing spaces at the end of a match so we don't need to use trim() everywhere
 var SELECTOR_PATTERN = /(.+?){\s*([\S\s]*?)\s*\}/gm;
 var COMMENT_PATTERN = /\/\*([\S\s]*?)\*\//gm;
-
-var TAB_CHARACTER = ' ';
-var TAB_SIZE = 2;
+var COLOR_PATTERN = /(?:#((?:[0-9a-f]{3}){1,2})|((?:rgb|hsl)a?)\((25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*,\s*(25[0-5]|2[0-4]\d|1\d{1,2}|\d\d?)\s*(?:,\s*(1(?:\.0)?|(?:0|0?\.\d\d?)))?\))/gim;
 
 var fishsticss = {
 
   _scrape: function(css) {
 
     var styles = {};
+    var colors = {};
 
+    // TODO: use css.match(SELECTOR_PATTERN) instead
     var match = SELECTOR_PATTERN.exec(css);
     while (match) {
 
       var selector = match[1].trim();
 
-      // TODO: use a fat arrow function for this filter
+      // Split apart the style properties
+      // TODO: use a fat arrow function for this filter?
       var rules = match[2].trim().split(';').filter(function(rule) {
         return rule;
       }).reduce(function(a, b) {
+
         var rule = b.split(':').filter(function(rule) {
           return rule;
         });
-        a[rule[0].trim()] = rule[1].trim();
+        if (rule.length > 1) {
+
+          var value = rule[1].trim();
+
+          // Check if the value is a color (hex, rgb, or hsl)
+          var colorMatch = COLOR_PATTERN.exec(value);
+          if (colorMatch) {
+
+            // Format the color appropriately
+            // TODO: make color formatting optional
+            var color = new Color(colorMatch[0]);
+            var colorString = color.alpha() === 1 ?
+                color.hexString().toLowerCase() : color.rgbString();
+
+            // Increment count for the color
+            if (!colors[colorString]) {
+              colors[colorString] = 0;
+            }
+            colors[colorString] += 1;
+            value = value.replace(colorMatch[0], colorString);
+          }
+
+          a[rule[0].trim()] = value;
+        }
         return a;
       }, {});
 
+      // Assign styles to the selector or define a new selector
       if (styles[selector]) {
         styles[selector].rules = Object.assign(styles[selector].rules, rules);
       } else {
@@ -40,7 +67,28 @@ var fishsticss = {
       match = SELECTOR_PATTERN.exec(css);
     }
 
-    return styles;
+    return {
+      styles: styles,
+      colors: colors
+    };
+  },
+
+  _sort: function(styles) {
+
+    // Move subclasses to the top of the list of children
+    var selectors = Object.keys(styles).reverse();
+    for (var i = selectors.length - 1; i >= 0; i--) {
+      var nextIndex = selectors[i].indexOf('&') === 0 ?
+          0 : selectors.length - 1;
+      selectors.splice(nextIndex, 0, selectors.splice(i, 1)[0]);
+    }
+
+    var sorted = {};
+    selectors.forEach(function(selector) {
+      sorted[selector] = styles[selector];
+    });
+
+    return sorted;
   },
 
   _scrub: function(styles) {
@@ -80,23 +128,6 @@ var fishsticss = {
     return styles;
   },
 
-  _sort: function(styles) {
-
-    // Move subclasses to the top of the list of children
-    var selectors = Object.keys(styles).reverse();
-    for (var i = selectors.length - 1; i >= 0; i--) {
-      var nextIndex = selectors[i].indexOf('&') === 0 ? 0 : selectors.length - 1;
-      selectors.splice(nextIndex, 0, selectors.splice(i, 1)[0]);
-    }
-
-    var sorted = {};
-    selectors.forEach(function(selector) {
-      sorted[selector] = styles[selector];
-    });
-
-    return sorted;
-  },
-
   _rinse: function(styles) {
     for (var key in styles) {
       if (styles[key].nested) {
@@ -108,7 +139,17 @@ var fishsticss = {
 
   prepare: function(css) {
 
-    var styles = this._rinse(this._scrub(this._scrape(css)));
+    // Scrape the CSS for styles and colors
+    var scrapings = this._scrape(css);
+    var styles = this._rinse(this._scrub(scrapings.styles));
+    var colors = [];
+
+    // Create array of colors that occur more than once
+    for (var color in scrapings.colors) {
+      if (scrapings.colors[color] > 1) {
+        colors.push(color);
+      }
+    }
 
     // Get the comments
     var comments = [];
@@ -123,44 +164,86 @@ var fishsticss = {
 
     return {
       styles: styles,
+      colors: colors,
       comments: comments
     };
   },
 
-  _tab: function(level, options) {
-    var tabCharacter = options && options.tabCharacter || TAB_CHARACTER;
-    var tabSize = options && options.tabSize || TAB_SIZE;
-    return tabCharacter.repeat(tabSize * level);
+  _indent: function(level, options) {
+    var useTabs = options && options.useTabs;
+    return (useTabs ? '\t' : ' ').repeat((useTabs ? 1 : 2) * level);
   },
 
-  print: function(styles, comments, options) {
+  print: function(styles, colors, comments, options, start) {
 
     var output = '';
     var level = options && options.level || 0;
+    var variableSymbol = options &&
+        options.language && options.language.search(/s[ac]ss/) > -1 ? '$' : '@';
+
+    if (colors && colors.length && start) {
+      if (!options || options.includeComments) {
+        output += '// Color variables\n'
+      }
+      colors.forEach(function(color, index) {
+        output += variableSymbol + 'var' + (index + 1) + ': ' + color + ';\n';
+      });
+      output += '\n';
+    }
 
     for (var selector in styles) {
 
       var style = styles[selector];
 
       // Print the comments
-      if (comments && comments.length && comments[0].index < style.index) {
-        if (output.length > 0 && output.charAt(output.length - 1) !== '\n') {
-          output += '\n';
+      if (comments && comments.length) {
+        var commentIndex = -1;
+        for (var i = 0; i < comments.length; i++) {
+          if (comments[i].index < style.index) {
+            commentIndex = i;
+          }
         }
-        output += this._tab(level, options) + '// ' + comments[0].text + '\n';
-        comments.splice(0, 1);
+        if (commentIndex > -1) {
+          if (output.length > 0 && output.charAt(output.length - 1) !== '\n') {
+            output += '\n';
+          }
+          output += this._indent(level, options) + '// ' +
+              comments[commentIndex].text + '\n';
+          comments.splice(commentIndex, 1);
+        }
       }
 
       // Print the styles
-      output += this._tab(level, options) + selector + ' {\n';
+      output += this._indent(level, options) + selector;
+      if (!options || options.language !== 'sass') {
+        output += ' {';
+      }
+      output += '\n';
       for (var property in style.rules) {
-        output += this._tab(level + 1, options);
-        output += property + ': ' + style.rules[property] + ';\n';
+
+        output += this._indent(level + 1, options);
+        output += property + ': ';
+
+        var colorIndex = !colors ? -1 : colors.findIndex(function(color) {
+          return style.rules[property].indexOf(color) > -1;
+        });
+        if (colorIndex > -1) {
+          output += style.rules[property].replace(colors[colorIndex],
+              variableSymbol + 'var' + (colorIndex + 1));
+        } else {
+          output += style.rules[property];
+        }
+        output += ';\n';
       }
       if (style.children) {
-        output += this.print(style.children, comments, {level: level + 1});
+        output += this.print(style.children, colors, comments,
+            Object.assign(options || {}, {level: level + 1}));
       }
-      output += this._tab(level, options) + '}\n';
+      output += this._indent(level, options);
+      if (!options || options.language !== 'sass') {
+        output += '}';
+      }
+      output += '\n';
 
       if (!level) {
         output += '\n';
@@ -170,9 +253,20 @@ var fishsticss = {
     return output;
   },
 
-  parse: function(css) {
+  parse: function(css, options) {
+
+    // Options include...
+    // language [string] Accepts 'less', 'sass', and 'scss' (default is 'less')
+    // createVariables [bool] Whether or not color variables are created
+    // includeComments [bool] Whether or not comments are included
+    // useTabs [bool] If you prefer to use tabs rather than spaces
+
     var results = this.prepare(css);
-    return this.print(results.styles, results.comments);
+    return this.print(results.styles,
+        options && !options.createVariables ? null : results.colors,
+        options && !options.includeComments ? null : results.comments,
+        options,
+        true);
   }
 };
 

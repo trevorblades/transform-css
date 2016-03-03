@@ -1,4 +1,3 @@
-Fishsticss
-==========
+#Fishsticss
 
-Fishsticss takes your old school CSS files and converts them to beautiful, functional LESS files.
+Making your stylesheets cool again. Fishsticss is a CSS to LESS/SCSS/SASS conversion tool and stylesheet makeover artist.

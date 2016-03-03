@@ -1,7 +1,11 @@
 @import (reference) '../variables';
+@import './dropdown';
+@import './toggle';
 
 @padding-size: 20px;
 @header-height: 60px;
+@subheader-height: 48px;
+@footer-height: 32px;
 
 .fs-app {
   width: 100%;
@@ -17,8 +21,8 @@
     height: @header-height;
     padding: @padding-size;
     border-bottom: 1px solid @gray-lighter;
-    background-image: url('../assets/fish.jpg');
-    background-size: 640px;
+    background-image: url('../assets/fish.png');
+    background-size: 540px 120px;
     background-position: right 42%;
     background-repeat: no-repeat;
     position: absolute;
@@ -33,11 +37,30 @@
       letter-spacing: 0.2em;
     }
   }
+  .fs-subheader {
+    width: 100%;
+    height: @subheader-height;
+    padding: 0 @padding-size;
+    box-shadow: 0 1px 0 @gray-lighter;
+    background-color: @gray-lightest;
+    position: absolute;
+    top: @header-height;
+    left: 0;
+    .fs-dropdown, .fs-toggle {
+      margin-top: 6px;
+      margin-right: @subheader-height;
+    }
+    .fs-toggle:last-child {
+      margin-right: 0;
+      float: right;
+    }
+  }
   .fs-row {
     width: 100%;
     position: absolute;
-    top: @header-height;
-    bottom: 0;
+    top: @header-height + @subheader-height;
+    left: 0;
+    bottom: @footer-height;
     .fs-col {
       width: 50%;
       height: 100%;
@@ -53,7 +76,17 @@
         left: 50%;
       }
 
-      .fs-input, .fs-output {
+      label {
+        margin-left: @padding-size / 2;
+        padding: 0.25em 0.75em;
+        border: 1px solid @gray-lighter;
+        font-size: 12px;
+        background-color: #fff;
+        position: absolute;
+        top: @padding-size;
+        transform: translateY(-50%);
+      }
+      textarea {
         width: 100%;
         height: 100%;
         margin: 0;
@@ -74,5 +107,15 @@
         cursor: pointer;
       }
     }
+  }
+  .fs-footer {
+    width: 100%;
+    height: @footer-height;
+    padding: 0 @padding-size @padding-size;
+    font-size: 12px;
+    line-height: @footer-height - @padding-size;
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 }
