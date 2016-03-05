@@ -5,26 +5,33 @@ var Toggle = require('./toggle');
 var fishsticss = require('../fishsticss');
 
 var LANGUAGES = ['less', 'sass', 'scss'];
-var DEFAULT_INPUT = '/* Comments ain\'t no thang! */\n' +
-    '#id {\n' +
-    '\twidth: 100%;\n' +
-    '\tcolor: rgb(0, 0,15);\n' +
-    '}\n' +
-    '#id {\n' +
-    '\theight: 100%;\n' +
-    '}\n' +
-    '#id .class {\n' +
-    '\theight: 100%;\n' +
-    '\tborder: 1px solid #ff0000;\n' +
-    '}\n' +
-    '/* A comment before a child class */\n' +
-    '#id .class .child-class {\n' +
-    '\tmargin-top: 24px;\n' +
-    '}\n' +
-    '/* A comment before a sub class */\n' +
-    '#id .class.sub-class {\n' +
-    '\tcolor: #ff0000;\n' +
-    '}';
+var DEFAULT_INPUT = '\
+@media all and (min-width: 1040px) {\n\
+\t.class{\n\
+\t\tdisplay:none;\n\
+\t\tcolor:#ff0000\n\
+\t}\n\
+}\n\
+/* Comments ain\'t no thang! */\n\
+#id {\n\
+\twidth: 100%;\n\
+\tcolor: rgb(0, 0,15);\n\
+}\n\
+#id {\n\
+\theight: 100%;\n\
+}\n\
+#id .class {\n\
+\theight: 100%;\n\
+\tborder: 1px solid #ff0000;\n\
+}\n\
+/* A comment before a child class */\n\
+#id .class .child-class {\n\
+\tmargin-top: 24px;\n\
+}\n\
+/* A comment before a sub class */\n\
+#id .class.sub-class {\n\
+\tcolor: #ff0000;\n\
+    }';
 
 var App = React.createClass({
 
