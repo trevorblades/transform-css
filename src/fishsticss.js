@@ -115,14 +115,19 @@ var fishsticss = {
   },
 
   _scrub: function(styles) {
-
+	var splitChar = ['.',' ','#'];
     var selectors = Object.keys(styles);
     for (var key in styles) {
 
       var selectorIndex = -1;
       for (var i = 0; i < selectors.length; i++) {
         if (key !== selectors[i] && key.indexOf(selectors[i]) === 0) {
-          selectorIndex = i;
+          if (key.length > selectors[i].length){
+        	  if (splitChar.indexOf(key.charAt(selectors[i].length)) >= 0)
+        		  selectorIndex = i;
+          }else{
+        	  selectorIndex = i;
+          }
         }
       }
 
