@@ -32,21 +32,22 @@ var fishsticss = {
           var value = rule[1].trim();
 
           // Check if the value is a color (hex, rgb, or hsl)
-          var colorMatch = COLOR_PATTERN.exec(value);
+          var colorMatch = value.match(COLOR_PATTERN);
           if (colorMatch) {
+            for (var i = colorMatch.length - 1; i >= 0; i--) {
+              // Format the color appropriately
+              // TODO: make color formatting optional
+              var color = new Color(colorMatch[i]);
+              var colorString = color.alpha() === 1 ?
+                  color.hexString().toLowerCase() : color.rgbString();
 
-            // Format the color appropriately
-            // TODO: make color formatting optional
-            var color = new Color(colorMatch[0]);
-            var colorString = color.alpha() === 1 ?
-                color.hexString().toLowerCase() : color.rgbString();
-
-            // Increment count for the color
-            if (!colors[colorString]) {
-              colors[colorString] = 0;
+              // Increment count for the color
+              if (!colors[colorString]) {
+                colors[colorString] = 0;
+              }
+              colors[colorString] += 1;
+              value = value.replace(colorMatch[i], colorString);
             }
-            colors[colorString] += 1;
-            value = value.replace(colorMatch[0], colorString);
           }
 
           a[rule[0].trim()] = value;
@@ -224,15 +225,13 @@ var fishsticss = {
         output += this._indent(level + 1, options);
         output += property + ': ';
 
-        var colorIndex = !colors ? -1 : colors.findIndex(function(color) {
-          return style.rules[property].indexOf(color) > -1;
-        });
-        if (colorIndex > -1) {
-          output += style.rules[property].replace(colors[colorIndex],
-              variableSymbol + 'var' + (colorIndex + 1));
-        } else {
-          output += style.rules[property];
+        if ((new RegExp(colors.join('|'), 'g')).test(style.rules[property])) {
+          for (var i = colors.length - 1; i >= 0; i--) {
+            var re = new RegExp(colors[i], 'g');
+            style.rules[property] = style.rules[property].replace(re, variableSymbol + 'var' + (i + 1));
+          }
         }
+        output += style.rules[property];
         output += ';\n';
       }
       if (style.children) {
