@@ -12,7 +12,8 @@ var buffer = require('vinyl-buffer');
 var source = require('vinyl-source-stream');
 
 var SRC_DIR = './src/';
-var BUILD_DIR = './build/';
+var DEV_DIR = './dev/';
+var DIST_DIR = './dist/';
 
 /**
  * Tasks for generating and watching scripts in development/debug mode.
@@ -20,7 +21,7 @@ var BUILD_DIR = './build/';
 
 function devMarkup() {
   return gulp.src(SRC_DIR + 'index.html')
-      .pipe(gulp.dest(BUILD_DIR))
+      .pipe(gulp.dest(DEV_DIR))
       .pipe(browserSync.reload({stream: true}));
 }
 gulp.task('dev-markup', devMarkup);
@@ -32,7 +33,7 @@ function devScripts() {
      .pipe(buffer())
      .pipe(sourcemaps.init({loadMaps: true}))
      .pipe(sourcemaps.write('./'))
-     .pipe(gulp.dest(BUILD_DIR))
+     .pipe(gulp.dest(DEV_DIR))
      .pipe(browserSync.stream());
 }
 gulp.task('dev-scripts', devScripts);
@@ -50,7 +51,7 @@ function devStyles() {
         stream.end();
       })
       .pipe(sourcemaps.write())
-      .pipe(gulp.dest(BUILD_DIR))
+      .pipe(gulp.dest(DEV_DIR))
       .pipe(browserSync.stream());
   return stream;
 }
@@ -58,7 +59,7 @@ gulp.task('dev-styles', devStyles);
 
 function devAssets() {
   return gulp.src(SRC_DIR + '**/assets/**')
-      .pipe(gulp.dest(BUILD_DIR))
+      .pipe(gulp.dest(DEV_DIR))
       .pipe(browserSync.stream());
 }
 gulp.task('dev-assets', devAssets);
@@ -66,7 +67,7 @@ gulp.task('dev-assets', devAssets);
 gulp.task('dev-browser-sync', function(done) {
   return browserSync.init({
     server: {
-      baseDir: BUILD_DIR
+      baseDir: DEV_DIR
     },
     open: false,
     ghostMode: false
@@ -98,11 +99,11 @@ gulp.task('dev', gulp.parallel('dev-serve', 'dev-watch'));
  */
 
 gulp.task('dist-clean', function() {
-  return del(BUILD_DIR + '**/*');
+  return del(DIST_DIR + '**/*');
 });
 
 gulp.task('dist-markup', function() {
-  return gulp.src(SRC_DIR + 'index.html').pipe(gulp.dest(BUILD_DIR));
+  return gulp.src(SRC_DIR + 'index.html').pipe(gulp.dest(DIST_DIR));
 });
 
 gulp.task('dist-scripts', function() {
@@ -110,7 +111,7 @@ gulp.task('dist-scripts', function() {
       .pipe(source('main.js'))
       .pipe(buffer())
       .pipe(uglify({compress: true}))
-      .pipe(gulp.dest(BUILD_DIR));
+      .pipe(gulp.dest(DIST_DIR));
 });
 
 gulp.task('dist-styles', function() {
@@ -123,12 +124,12 @@ gulp.task('dist-styles', function() {
         gutil.log('LESS compilation failed: ' + err.message);
         process.exit(1);
       })
-      .pipe(gulp.dest(BUILD_DIR));
+      .pipe(gulp.dest(DIST_DIR));
 });
 
 gulp.task('dist-assets', function() {
   return gulp.src(SRC_DIR + '**/assets/**')
-      .pipe(gulp.dest(BUILD_DIR));
+      .pipe(gulp.dest(DIST_DIR));
 });
 
 gulp.task('dist-build', gulp.parallel([
