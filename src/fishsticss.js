@@ -220,20 +220,24 @@ var fishsticss = {
         output += ' {';
       }
       output += '\n';
+
       for (var property in style.rules) {
 
         output += this._indent(level + 1, options);
         output += property + ': ';
 
-        if ((new RegExp(colors.join('|'), 'g')).test(style.rules[property])) {
-          for (var i = colors.length - 1; i >= 0; i--) {
-            var re = new RegExp(colors[i], 'g');
-            style.rules[property] = style.rules[property].replace(re, variableSymbol + 'var' + (i + 1));
-          }
+        // Replace colors with variables
+        if (colors && (new RegExp(colors.join('|'), 'g')).test(style.rules[property])) {
+          colors.forEach(function(color, index) {
+            style.rules[property] = style.rules[property].replace(new RegExp(color, 'g'),
+                variableSymbol + 'var' + (index + 1));
+          });
         }
+
         output += style.rules[property];
         output += ';\n';
       }
+
       if (style.children) {
         output += this.print(style.children, colors, comments,
             Object.assign(options || {}, {level: level + 1}));
