@@ -1,6 +1,7 @@
 {
   "extends": "@knoword",
   "env": {
-    "node": true
+    "node": true,
+    "jest": true
   }
 }
