@@ -1,10 +1,27 @@
 const css = require('css');
+const fromPairs = require('lodash/fromPairs');
+const merge = require('lodash/merge');
+const reject = require('lodash/reject');
 
 module.exports = function(code) {
   const parsed = css.parse(code);
-  parsed.stylesheet.rules.forEach(rule => {
-    console.log(rule.selectors, rule.declarations);
-  });
+  const rules = reject(parsed.stylesheet.rules, 'comment');
+  const styles = rules.reduce((obj, rule) => {
+    const declarations = rule.declarations.map(declaration => [
+      declaration.property,
+      declaration.value
+    ]);
+
+    return {
+      ...obj,
+      [rule.selectors]: merge(
+        obj[rule.selectors] || {},
+        fromPairs(declarations)
+      )
+    };
+  }, {});
+
+  console.log(styles);
   return parsed;
 };
 
