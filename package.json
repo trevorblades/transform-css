@@ -10,7 +10,7 @@
   "scripts": {
     "pretest": "eslint index.js test.js",
     "test": "jest --env=node",
-    "prepare": "babel index.js --out-dir lib --presets=@babel/env"
+    "prepare": "babel index.js --out-dir lib"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.55",
