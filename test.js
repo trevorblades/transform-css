@@ -10,9 +10,14 @@ const css = `
   #id {
     height: 100%;
   }
-  #id .class {
+
+  #id .class, #id .other {
     height: 100%;
     border: 1px solid #ff0000;
+  }
+
+  #id .class {
+    color: red;
   }
   
   /* A comment before a child class */

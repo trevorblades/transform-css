@@ -1,27 +1,81 @@
 const css = require('css');
 const fromPairs = require('lodash/fromPairs');
-const merge = require('lodash/merge');
+const orderBy = require('lodash/orderBy');
 const reject = require('lodash/reject');
+const uniq = require('lodash/uniq');
 
 module.exports = function(code) {
   const parsed = css.parse(code);
   const rules = reject(parsed.stylesheet.rules, 'comment');
   const styles = rules.reduce((obj, rule) => {
-    const declarations = rule.declarations.map(declaration => [
-      declaration.property,
-      declaration.value
-    ]);
+    const declarations = fromPairs(
+      rule.declarations.map(declaration => [
+        declaration.property,
+        declaration.value
+      ])
+    );
+
+    const selector = rule.selectors
+      .toString()
+      .replace(/\s+/, ' ')
+      .replace(/(\w+)((#|\.)\w+)/, '$1 &$2');
+    const existing = obj[selector] || {};
+    const merged = {
+      ...existing,
+      ...declarations
+    };
 
     return {
       ...obj,
-      [rule.selectors]: merge(
-        obj[rule.selectors] || {},
-        fromPairs(declarations)
-      )
+      [selector]: merged
     };
   }, {});
 
+  const selectors = Object.keys(styles);
+  const nested = orderBy(
+    selectors.filter(selector => {
+      const parts = selector.split(',');
+      if (parts.some(part => part.indexOf(' ') > -1)) {
+        if (parts.length === 1) {
+          return true;
+        }
+
+        const parents = uniq(parts.map(part => part.split(' ')[0]));
+        if (parents.length === 1) {
+          return true;
+        }
+      }
+
+      return false;
+    }),
+    selector => selector.split(' ').length,
+    'desc'
+  );
+
+  nested.forEach(selector => {
+    let lastIndex = selector.length;
+    while (lastIndex > -1) {
+      const index = selector.lastIndexOf(' ', lastIndex);
+      if (index > -1) {
+        const parent = selector.slice(0, index);
+        const child = selector.slice(index + 1);
+        if (styles[parent]) {
+          styles[parent] = {
+            ...styles[parent],
+            [child]: styles[selector]
+          };
+
+          delete styles[selector];
+          break;
+        }
+      }
+
+      lastIndex = index - 1;
+    }
+  });
+
   console.log(styles);
+
   return parsed;
 };
 
