@@ -88,7 +88,7 @@ module.exports = function(code, options = {}) {
     const selector = rule.selectors
       .join(COMMA_SPACE)
       .replace(/\s+/g, SPACE)
-      .replace(/(\w+)((#|\.)\w+)/g, '$1 &$2');
+      .replace(/(\w+)((#|\.|:)\w+)/g, '$1 &$2');
     const existing = obj[selector] || {};
     const merged = {
       ...existing,
