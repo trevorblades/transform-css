@@ -40,6 +40,7 @@ test('handles multiple levels of descendant selectors', () => {
       }
     }
   `;
+
   expect(actual).toBe(expected);
 });
 
@@ -215,4 +216,36 @@ describe('accepts different indentation options', () => {
 
     expect(actual).toBe(expected);
   });
+});
+
+test('omit brackets and semicolons', () => {
+  const css = `
+      #id {
+        width: 420px;
+        color: green;
+      }
+
+      #id .child-class {
+        overflow: hidden;
+      }
+
+      #id .child-class p {
+        margin: 0 1em;
+      }
+    `;
+
+  const actual = parse(css, {omitBracketsAndSemicolons: true});
+  const expected = outdent`
+      #id
+        width: 420px
+        color: green
+
+        .child-class
+          overflow: hidden
+
+          p
+            margin: 0 1em
+    `;
+
+  expect(actual).toBe(expected);
 });

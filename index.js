@@ -45,6 +45,7 @@ function render(styles, count, options) {
   let text = '';
   let index = -1;
 
+  const omitBracketsAndSemicolons = options.omitBracketsAndSemicolons === true;
   const indent = string =>
     indentString(string, count, {
       indent:
@@ -62,13 +63,25 @@ function render(styles, count, options) {
         text += '\n';
       }
 
-      text += indent(`${key} {\n`);
-      text += render(value, count + 1, options);
-      text += indent('}\n');
+      text += indent(key);
+      if (!omitBracketsAndSemicolons) {
+        text += ' {';
+      }
+
+      text += `\n${render(value, count + 1, options)}`;
+      if (!omitBracketsAndSemicolons) {
+        text += indent('}\n');
+      }
+
       continue;
     }
 
-    text += indent(`${key}: ${value};\n`);
+    text += indent(`${key}: ${value}`);
+    if (!omitBracketsAndSemicolons) {
+      text += ';';
+    }
+
+    text += '\n';
   }
 
   return text;
