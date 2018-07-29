@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "module": "index.js",
   "scripts": {
-    "pretest": "eslint *.js",
+    "pretest": "eslint index.js test.js",
     "test": "jest --env=node",
     "prepare": "babel index.js --out-dir lib --presets=@babel/env"
   },
