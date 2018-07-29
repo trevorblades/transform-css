@@ -5,8 +5,6 @@
   "license": "MIT",
   "repository": "github:trevorblades/fishsticss",
   "description": "Transforms CSS into LESS/SASS/SCSS",
-  "main": "lib/index.js",
-  "module": "index.js",
   "scripts": {
     "pretest": "eslint index.js test.js",
     "test": "jest --env=node",

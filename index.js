@@ -1,11 +1,11 @@
-import css from 'css';
-import indentString from 'indent-string';
-import fromPairs from 'lodash/fromPairs';
-import map from 'lodash/map';
-import orderBy from 'lodash/orderBy';
-import reject from 'lodash/reject';
-import repeat from 'lodash/repeat';
-import uniq from 'lodash/uniq';
+const css = require('css');
+const indentString = require('indent-string');
+const fromPairs = require('lodash/fromPairs');
+const map = require('lodash/map');
+const orderBy = require('lodash/orderBy');
+const reject = require('lodash/reject');
+const repeat = require('lodash/repeat');
+const uniq = require('lodash/uniq');
 
 const SPACE = ' ';
 const COMMA_SPACE = ', ';
@@ -87,7 +87,7 @@ function render(styles, count, options) {
   return text;
 }
 
-export default function parse(code, options = {}) {
+module.exports = function parse(code, options = {}) {
   const parsed = css.parse(code);
 
   // TODO: support comments
@@ -175,4 +175,4 @@ export default function parse(code, options = {}) {
 
   const cleaned = cleanup(styles);
   return render(cleaned, 0, options).replace(/\s+$/, '');
-}
+};
