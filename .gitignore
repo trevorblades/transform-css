@@ -1,4 +1,2 @@
-dev
-dist
 node_modules
-*.log
+lib
