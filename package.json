@@ -1,10 +1,10 @@
 {
-  "name": "fishsticss",
+  "name": "transform-css",
   "version": "0.2.0",
   "author": "Trevor Blades <tdblades@gmail.com>",
   "license": "MIT",
-  "repository": "github:trevorblades/fishsticss",
-  "description": "Transforms CSS into LESS/SASS/SCSS",
+  "repository": "github:trevorblades/transform-css",
+  "description": "Transforms CSS into beautifully formatted styles ready to use with a preprocessor",
   "main": "lib/index.js",
   "module": "index.js",
   "scripts": {

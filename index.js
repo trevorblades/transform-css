@@ -87,7 +87,7 @@ function render(styles, count, options) {
   return text;
 }
 
-module.exports = function parse(code, options = {}) {
+module.exports = function transformCss(code, options = {}) {
   const parsed = css.parse(code);
 
   // TODO: support comments

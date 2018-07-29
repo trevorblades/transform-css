@@ -1,5 +1,5 @@
 const outdent = require('outdent');
-const parse = require('.');
+const transformCss = require('.');
 
 test('handles multiple levels of descendant selectors', () => {
   const css = `
@@ -21,7 +21,7 @@ test('handles multiple levels of descendant selectors', () => {
     }
   `;
 
-  const actual = parse(css);
+  const actual = transformCss(css);
   const expected = outdent`
     #id {
       width: 420px;
@@ -53,7 +53,7 @@ describe('formats css with weird or inconsistent spacing', () => {
       }
     `;
 
-    const actual = parse(css);
+    const actual = transformCss(css);
     const expected = outdent`
       #id {
         width: 420px;
@@ -78,7 +78,7 @@ describe('formats css with weird or inconsistent spacing', () => {
       }
     `;
 
-    const actual = parse(css);
+    const actual = transformCss(css);
     const expected = outdent`
       #id {
         position: relative;
@@ -114,7 +114,7 @@ describe('formats css with weird or inconsistent spacing', () => {
 
     `;
 
-    const actual = parse(css);
+    const actual = transformCss(css);
     const expected = outdent`
       #id {
         width: 420px;
@@ -146,7 +146,7 @@ test('does not nest selectors unless their parents have styles', () => {
     }
   `;
 
-  const actual = parse(css);
+  const actual = transformCss(css);
   const expected = outdent`
     #id {
       width: 420px;
@@ -178,7 +178,7 @@ describe('accepts different indentation options', () => {
   `;
 
   test('variable number of spaces', () => {
-    const actual = parse(css, {spaces: 3});
+    const actual = transformCss(css, {spaces: 3});
     const expected = outdent`
       #id {
          width: 420px;
@@ -198,7 +198,7 @@ describe('accepts different indentation options', () => {
   });
 
   test('use tabs', () => {
-    const actual = parse(css, {spaces: false});
+    const actual = transformCss(css, {spaces: false});
     const expected = outdent`
       #id {
       \twidth: 420px;
@@ -234,7 +234,7 @@ test('omit brackets and semicolons', () => {
       }
     `;
 
-  const actual = parse(css, {omitBracketsAndSemicolons: true});
+  const actual = transformCss(css, {omitBracketsAndSemicolons: true});
   const expected = outdent`
       #id
         width: 420px
