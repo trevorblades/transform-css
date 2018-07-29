@@ -1,15 +1,16 @@
 const css = require('css');
+const indentString = require('indent-string');
 const fromPairs = require('lodash/fromPairs');
 const map = require('lodash/map');
 const orderBy = require('lodash/orderBy');
 const reject = require('lodash/reject');
 const uniq = require('lodash/uniq');
 
-const COMMA = ',';
 const SPACE = ' ';
+const COMMA_SPACE = ', ';
 
 function isNested(selector) {
-  const parts = selector.split(COMMA);
+  const parts = selector.split(COMMA_SPACE);
   if (parts.some(part => part.indexOf(SPACE) > -1)) {
     if (parts.length === 1) {
       return true;
@@ -29,7 +30,7 @@ function cleanup(styles) {
   for (let selector in styles) {
     let value = styles[selector];
     if (typeof value === 'object') {
-      selector = selector.replace(/\s&/, '');
+      selector = selector.replace(/\s&/g, '');
       value = cleanup(value);
     }
 
@@ -39,26 +40,32 @@ function cleanup(styles) {
   return cleaned;
 }
 
-function render(styles) {
+function render(styles, count, options) {
   let text = '';
+  let index = -1;
+  const indent = string => indentString(string, count, options);
   for (const key in styles) {
+    index++;
+
     const value = styles[key];
     if (typeof value === 'object') {
-      text += `
-        ${key} {
-          ${render(value)}
-        }
-      `;
+      if (index) {
+        text += '\n';
+      }
+
+      text += indent(`${key} {\n`);
+      text += render(value, count + 1, options);
+      text += indent('}\n');
       continue;
     }
 
-    text += `${key}: ${value};`;
+    text += indent(`${key}: ${value};\n`);
   }
 
   return text;
 }
 
-module.exports = function(code) {
+module.exports = function(code, options = {indent: '  '}) {
   const parsed = css.parse(code);
   const rules = reject(parsed.stylesheet.rules, 'comment');
   const styles = rules.reduce((obj, rule) => {
@@ -70,9 +77,9 @@ module.exports = function(code) {
     );
 
     const selector = rule.selectors
-      .toString()
-      .replace(/\s+/, SPACE)
-      .replace(/(\w+)((#|\.)\w+)/, '$1 &$2');
+      .join(COMMA_SPACE)
+      .replace(/\s+/g, SPACE)
+      .replace(/(\w+)((#|\.)\w+)/g, '$1 &$2');
     const existing = obj[selector] || {};
     const merged = {
       ...existing,
@@ -93,16 +100,18 @@ module.exports = function(code) {
   );
 
   nested.forEach(selector => {
-    if (selector.indexOf(COMMA) > -1) {
+    if (selector.indexOf(COMMA_SPACE) > -1) {
       // we're dealing with multiple nested selectors
-      const parts = selector.split(COMMA).map(part => part.split(SPACE));
+      const parts = selector.split(COMMA_SPACE).map(part => part.split(SPACE));
       let offset = Math.min(...map(parts, 'length')) - 1;
       while (offset > 0) {
         const parents = parts.map(part => part.slice(0, offset).join(SPACE));
         if (uniq(parents).length === 1) {
           const parent = parents[0];
           if (styles[parent]) {
-            const child = parts.map(part => part.slice(offset).join(SPACE));
+            const child = parts
+              .map(part => part.slice(offset).join(SPACE))
+              .join(COMMA_SPACE);
             styles[parent] = {
               ...styles[parent],
               [child]: styles[selector]
@@ -140,5 +149,6 @@ module.exports = function(code) {
     }
   });
 
-  return render(cleanup(styles));
+  const cleaned = cleanup(styles);
+  return render(cleaned, 0, options);
 };
