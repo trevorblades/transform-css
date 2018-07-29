@@ -4,6 +4,7 @@ const fromPairs = require('lodash/fromPairs');
 const map = require('lodash/map');
 const orderBy = require('lodash/orderBy');
 const reject = require('lodash/reject');
+const repeat = require('lodash/repeat');
 const uniq = require('lodash/uniq');
 
 const SPACE = ' ';
@@ -43,7 +44,15 @@ function cleanup(styles) {
 function render(styles, count, options) {
   let text = '';
   let index = -1;
-  const indent = string => indentString(string, count, options);
+
+  const indent = string =>
+    indentString(string, count, {
+      indent:
+        options.spaces !== false
+          ? repeat(' ', Number.isInteger(options.spaces) ? options.spaces : 2)
+          : '\t'
+    });
+
   for (const key in styles) {
     index++;
 
@@ -65,7 +74,7 @@ function render(styles, count, options) {
   return text;
 }
 
-module.exports = function(code, options = {indent: '  '}) {
+module.exports = function(code, options = {}) {
   const parsed = css.parse(code);
   const rules = reject(parsed.stylesheet.rules, 'comment');
   const styles = rules.reduce((obj, rule) => {
