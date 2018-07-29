@@ -58,7 +58,7 @@ function render(styles, count, options) {
 
     const value = styles[key];
     if (typeof value === 'object') {
-      if (index) {
+      if (index > 0) {
         text += '\n';
       }
 
