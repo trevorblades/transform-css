@@ -19,7 +19,6 @@
     "outdent": "^0.5.0"
   },
   "dependencies": {
-    "color": "^3.0.0",
     "css": "^2.2.3",
     "indent-string": "^3.2.0",
     "lodash": "^4.17.10"
