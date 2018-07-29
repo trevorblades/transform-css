@@ -159,5 +159,5 @@ module.exports = function(code, options = {}) {
   });
 
   const cleaned = cleanup(styles);
-  return render(cleaned, 0, options);
+  return render(cleaned, 0, options).replace(/\s+$/, '');
 };
