@@ -11,7 +11,7 @@ const css = `
     height: 100%;
   }
 
-  #id .class, #id .other {
+  #id .class, #id .other .hehe {
     height: 100%;
     border: 1px solid #ff0000;
   }
@@ -25,9 +25,17 @@ const css = `
     margin-top: 24px;
   }
   
+  #id .class .child-class2.lol {
+    width: 250px;
+  }
+
   /* A comment before a sub class */
   #id .class.sub-class {
     color: #ff0000;
+  }
+
+  .another.random-thing {
+    color: green;
   }
 `;
 
