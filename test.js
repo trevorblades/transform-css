@@ -1,5 +1,5 @@
 const outdent = require('outdent');
-const parse = require('.').default;
+const parse = require('.');
 
 test('handles multiple levels of descendant selectors', () => {
   const css = `

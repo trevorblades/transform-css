@@ -89,6 +89,8 @@ function render(styles, count, options) {
 
 export default function parse(code, options = {}) {
   const parsed = css.parse(code);
+
+  // TODO: support comments
   const rules = reject(parsed.stylesheet.rules, 'comment');
   const styles = rules.reduce((obj, rule) => {
     const declarations = fromPairs(
