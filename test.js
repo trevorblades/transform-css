@@ -1,6 +1,11 @@
 const outdent = require('outdent');
 const transformCss = require('.');
 
+test('renders nothing for malformed css', () => {
+  const actual = transformCss('not valid css');
+  expect(actual).toBe('');
+});
+
 test('handles multiple levels of descendant selectors', () => {
   const css = `
     #id {
