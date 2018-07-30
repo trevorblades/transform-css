@@ -5,6 +5,17 @@
   "license": "MIT",
   "repository": "github:trevorblades/transform-css",
   "description": "Transforms CSS into beautifully formatted styles ready to use with a preprocessor",
+  "keywords": [
+    "css",
+    "less",
+    "sass",
+    "scss",
+    "stylus",
+    "styles",
+    "transform",
+    "stylesheet",
+    "preprocessor"
+  ],
   "main": "lib/index.js",
   "module": "index.js",
   "scripts": {
