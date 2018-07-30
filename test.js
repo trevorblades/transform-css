@@ -44,6 +44,49 @@ test('handles multiple levels of descendant selectors', () => {
   expect(actual).toBe(expected);
 });
 
+test('only nests multiple selectors if they share a parent', () => {
+  const css = `
+    #id {
+      width: 420px;
+      color: green;
+    }
+
+    #id .child-class {
+      overflow: hidden;
+    }
+
+    #id .child-class p, #id .other-class {
+      margin: 0 1em;
+    }
+
+    #id .child-class ul, .footer-menu {
+      position: relative;
+    }
+  `;
+
+  const actual = transformCss(css);
+  const expected = outdent`
+    #id {
+      width: 420px;
+      color: green;
+
+      .child-class p, .other-class {
+        margin: 0 1em;
+      }
+
+      .child-class {
+        overflow: hidden;
+      }
+    }
+
+    #id .child-class ul, .footer-menu {
+      position: relative;
+    }
+  `;
+
+  expect(actual).toBe(expected);
+});
+
 describe('formats css with weird or inconsistent spacing', () => {
   test('differences in spacing among rules', () => {
     const css = `
