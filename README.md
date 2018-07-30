@@ -92,6 +92,8 @@ On the other hand, SASS and Stylus use newlines and tabs to separate stylesheet 
 transformCss(css, {omitBracketsAndSemicolons: true})
 ```
 
+Turns into...
+
 ```stylus
 #container
   height: 50px
