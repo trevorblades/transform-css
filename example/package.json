@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^1.4.2",
+    "@trevorblades/mui-theme": "^1.1.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-hot-loader": "^4.3.4"
