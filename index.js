@@ -88,7 +88,12 @@ function render(styles, count, options) {
 }
 
 module.exports = function transformCss(code, options = {}) {
-  const parsed = css.parse(code);
+  let parsed;
+  try {
+    parsed = css.parse(code);
+  } catch (error) {
+    return '';
+  }
 
   // TODO: support comments
   const rules = reject(parsed.stylesheet.rules, 'comment');

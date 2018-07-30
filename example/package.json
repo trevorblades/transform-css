@@ -2,14 +2,16 @@
   "scripts": {
     "pretest": "eslint ./",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "start": "webpack-dev-server --hot --mode development",
+    "start": "npm install --prefix '../' && webpack-dev-server --hot --mode development",
     "build": "webpack --mode production"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.55",
+    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.55",
     "@babel/preset-env": "^7.0.0-beta.55",
     "@babel/preset-react": "^7.0.0-beta.55",
     "@knoword/eslint-config": "^6.13.0",
+    "babel-eslint": "^8.2.6",
     "babel-loader": "^8.0.0-beta.4",
     "eslint": "^5.2.0",
     "html-webpack-plugin": "^3.2.0",
@@ -20,8 +22,11 @@
   "dependencies": {
     "@material-ui/core": "^1.4.2",
     "@trevorblades/mui-theme": "^1.1.0",
+    "babel-plugin-emotion": "^9.2.6",
+    "emotion": "^9.2.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-emotion": "^9.2.6",
     "react-hot-loader": "^4.3.4"
   }
 }
