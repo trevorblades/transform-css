@@ -37,7 +37,7 @@ const css = `
 transformCss(css);
 ```
 
-`transformCss(css)` will produce the following output:
+This code will produce the following output:
 
 ```less
 #id {
