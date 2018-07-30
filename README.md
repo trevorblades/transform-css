@@ -84,7 +84,7 @@ By default, `transform-css` will produce code that follows LESS or SCSS syntax, 
 }
 ```
 
-On the other hand, SASS and Stylus use newlines and tabs to separate stylesheet elements from one another. Use the option `omitBracketsAndSemicolons: true` to use this syntax.
+On the other hand, SASS and Stylus use newlines and tabs to separate stylesheet elements from one another. Set the `omitBracketsAndSemicolons` option to `true` to use this syntax.
 
 ```js
 transformCss(css, {omitBracketsAndSemicolons: true})
