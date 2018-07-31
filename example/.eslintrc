@@ -1,0 +1,7 @@
+{
+  "extends": "@knoword/eslint-config/react",
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true
+  }
+}
