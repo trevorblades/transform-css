@@ -3,6 +3,7 @@ import JssProvider from 'react-jss/lib/JssProvider';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import less from 'react-syntax-highlighter/languages/hljs/less';
+import stylus from 'react-syntax-highlighter/languages/hljs/stylus';
 import theme from '@trevorblades/mui-theme';
 import {
   MuiThemeProvider,
@@ -28,6 +29,7 @@ injectGlobal({
 });
 
 registerLanguage('less', less);
+registerLanguage('stylus', stylus);
 
 ReactDOM.render(
   <JssProvider jss={jss} generateClassName={generateClassName}>

@@ -68,6 +68,7 @@ const Options = styled(Paper)({
 
 class App extends Component {
   state = {
+    omit: false,
     spaces: true,
     input: outdent`
       #id {
@@ -105,13 +106,18 @@ class App extends Component {
 
   onInputChange = event => this.setState({input: event.target.value});
 
-  onSpacesChange = event => this.setState({spaces: event.target.checked});
+  onSwitchChange = event =>
+    this.setState({[event.target.name]: event.target.checked});
 
   onOutputClick = event => select(event.currentTarget);
 
   render() {
-    const {input, spaces} = this.state;
-    const output = transformCss(input, {spaces});
+    const {input, spaces, omit} = this.state;
+    const output = transformCss(input, {
+      spaces,
+      omitBracketsAndSemicolons: omit
+    });
+
     return (
       <Fragment>
         <CssBaseline />
@@ -141,7 +147,7 @@ class App extends Component {
             />
             <Output>
               <StyledSyntaxHighlighter
-                language="less"
+                language={this.state.omit ? 'stylus' : 'less'}
                 style={atomOneDark}
                 customStyle={{
                   padding,
@@ -154,7 +160,21 @@ class App extends Component {
               <Options>
                 <FormControlLabel
                   control={
-                    <Switch checked={spaces} onChange={this.onSpacesChange} />
+                    <Switch
+                      checked={omit}
+                      name="omit"
+                      onChange={this.onSwitchChange}
+                    />
+                  }
+                  label="SASS/Stylus syntax"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={spaces}
+                      name="spaces"
+                      onChange={this.onSwitchChange}
+                    />
                   }
                   label="Indent using spaces"
                 />
