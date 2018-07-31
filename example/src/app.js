@@ -2,18 +2,21 @@ import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import GitHubLogo from 'react-icons/lib/fa/github';
+import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import React, {Component, Fragment} from 'react';
 import Switch from '@material-ui/core/Switch';
 import SyntaxHighlighter from 'react-syntax-highlighter/light';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
+import TwitterLogo from 'react-icons/lib/fa/twitter';
 import Typography from '@material-ui/core/Typography';
 import outdent from 'outdent/lib';
 import select from 'select';
 import styled from 'react-emotion';
 import theme from '@trevorblades/mui-theme';
 import transformCss from '../../lib';
+import withProps from 'recompose/withProps';
 import {hot} from 'react-hot-loader';
 import {atomOneDark} from 'react-syntax-highlighter/styles/hljs';
 
@@ -23,10 +26,27 @@ const Container = styled.div({
   height: '100%'
 });
 
-const GitHubLink = styled.a({
-  marginLeft: 'auto',
+const Heading = withProps({
+  variant: 'title',
   color: 'inherit'
-});
+})(
+  styled(Typography)({
+    marginRight: 'auto'
+  })
+);
+
+const MenuItem = withProps({
+  color: 'inherit',
+  component: 'a',
+  target: 'blank',
+  rel: 'noopener noreferrer'
+})(
+  styled(IconButton)({
+    ':not(:last-child)': {
+      marginRight: theme.spacing.unit
+    }
+  })
+);
 
 const Content = styled.div({
   display: 'flex',
@@ -43,7 +63,8 @@ const Input = styled.textarea({
   fontFamily,
   fontSize,
   lineHeight,
-  outline: 'none'
+  outline: 'none',
+  resize: 'none'
 });
 
 const Output = styled.div({
@@ -124,17 +145,14 @@ class App extends Component {
         <Container>
           <AppBar position="static" elevation={0}>
             <Toolbar>
-              <Typography variant="title" color="inherit">
-                🐠 transform-css
-              </Typography>
+              <Heading>🐠 transform-css</Heading>
+              <MenuItem href="https://twitter.com/trevorblades">
+                <TwitterLogo />
+              </MenuItem>
               <Tooltip title="View on GitHub">
-                <GitHubLink
-                  href="https://github.com/trevorblades/transform-css"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <GitHubLogo size={32} />
-                </GitHubLink>
+                <MenuItem href="https://github.com/trevorblades/transform-css">
+                  <GitHubLogo />
+                </MenuItem>
               </Tooltip>
             </Toolbar>
           </AppBar>

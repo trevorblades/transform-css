@@ -34,6 +34,7 @@
     "react-icons": "^2.2.7",
     "react-jss": "^8.6.1",
     "react-syntax-highlighter": "^8.0.1",
+    "recompose": "^0.28.0",
     "select": "^1.1.2"
   }
 }
