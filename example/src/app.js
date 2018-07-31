@@ -1,12 +1,16 @@
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import GitHubLogo from 'react-icons/lib/fa/github';
+import Paper from '@material-ui/core/Paper';
 import React, {Component, Fragment} from 'react';
+import Switch from '@material-ui/core/Switch';
 import SyntaxHighlighter from 'react-syntax-highlighter/light';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import outdent from 'outdent/lib';
+import select from 'select';
 import styled from 'react-emotion';
 import theme from '@trevorblades/mui-theme';
 import transformCss from '../../lib';
@@ -42,19 +46,30 @@ const Input = styled.textarea({
   outline: 'none'
 });
 
-const Output = styled(SyntaxHighlighter)({
+const Output = styled.div({
   flexGrow: 1,
+  position: 'relative'
+});
+
+const StyledSyntaxHighlighter = styled(SyntaxHighlighter)({
+  flexGrow: 1,
+  height: '100%',
   margin: 0,
-  backgroundColor: theme.palette.grey[100],
   fontSize,
   lineHeight
 });
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+const Options = styled(Paper)({
+  paddingLeft: theme.spacing.unit * 2,
+  position: 'absolute',
+  bottom: padding,
+  right: padding
+});
 
-    const input = outdent`
+class App extends Component {
+  state = {
+    spaces: true,
+    input: outdent`
       #id {
         width: 420px;
         color: green;
@@ -71,23 +86,10 @@ class App extends Component {
       #id .child-class p:last-child {
         margin-bottom: 0;
       }
-    `;
-
-    this.state = {
-      input,
-      output: transformCss(input)
-    };
-  }
-
-  onChange = event => {
-    const input = event.target.value;
-    this.setState({
-      input,
-      output: transformCss(input)
-    });
+    `
   };
 
-  onKeyDown(event) {
+  onInputKeyDown(event) {
     // cause the tab key to print tabs
     if (event.keyCode === 9) {
       const start = event.target.selectionStart;
@@ -101,7 +103,15 @@ class App extends Component {
     }
   }
 
+  onInputChange = event => this.setState({input: event.target.value});
+
+  onSpacesChange = event => this.setState({spaces: event.target.checked});
+
+  onOutputClick = event => select(event.currentTarget);
+
   render() {
+    const {input, spaces} = this.state;
+    const output = transformCss(input, {spaces});
     return (
       <Fragment>
         <CssBaseline />
@@ -125,12 +135,30 @@ class App extends Component {
           <Content>
             <Input
               spellCheck={false}
-              value={this.state.input}
-              onChange={this.onChange}
-              onKeyDown={this.onKeyDown}
+              value={input}
+              onChange={this.onInputChange}
+              onKeyDown={this.onInputKeyDown}
             />
-            <Output language="less" style={atomOneDark} customStyle={{padding}}>
-              {this.state.output}
+            <Output>
+              <StyledSyntaxHighlighter
+                language="less"
+                style={atomOneDark}
+                customStyle={{
+                  padding,
+                  backgroundColor: theme.palette.grey[900]
+                }}
+                onClick={this.onOutputClick}
+              >
+                {output}
+              </StyledSyntaxHighlighter>
+              <Options>
+                <FormControlLabel
+                  control={
+                    <Switch checked={spaces} onChange={this.onSpacesChange} />
+                  }
+                  label="Indent using spaces"
+                />
+              </Options>
             </Output>
           </Content>
         </Container>
