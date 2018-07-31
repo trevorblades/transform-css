@@ -1,17 +1,27 @@
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import GitHubLogo from 'react-icons/lib/fa/github';
 import React, {Component, Fragment} from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter/light';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import outdent from 'outdent/lib';
 import styled from 'react-emotion';
 import theme from '@trevorblades/mui-theme';
 import transformCss from '../../lib';
 import {hot} from 'react-hot-loader';
+import {atomOneDark} from 'react-syntax-highlighter/styles/hljs';
 
 const Container = styled.div({
   display: 'flex',
   flexDirection: 'column',
   height: '100%'
+});
+
+const GitHubLink = styled.a({
+  marginLeft: 'auto',
+  color: 'inherit'
 });
 
 const Content = styled.div({
@@ -20,29 +30,54 @@ const Content = styled.div({
 });
 
 const padding = theme.spacing.unit * 3;
+const {fontFamily, fontSize, body1} = theme.typography;
+const {lineHeight} = body1;
 const Input = styled.textarea({
   width: '50%',
   padding,
   border: 'none',
-  fontFamily: theme.typography.fontFamily,
-  fontSize: theme.typography.fontSize,
-  lineHeight: theme.typography.body1.lineHeight,
+  fontFamily,
+  fontSize,
+  lineHeight,
   outline: 'none'
 });
 
-const Output = styled(Typography)({
+const Output = styled(SyntaxHighlighter)({
   flexGrow: 1,
   margin: 0,
-  padding,
   backgroundColor: theme.palette.grey[100],
-  whiteSpace: 'pre'
+  fontSize,
+  lineHeight
 });
 
 class App extends Component {
-  state = {
-    input: '',
-    output: ''
-  };
+  constructor(props) {
+    super(props);
+
+    const input = outdent`
+      #id {
+        width: 420px;
+        color: green;
+      }
+
+      #id .child-class {
+        overflow: hidden;
+      }
+
+      #id .child-class p {
+        margin: 0 1em;
+      }
+
+      #id .child-class p:last-child {
+        margin-bottom: 0;
+      }
+    `;
+
+    this.state = {
+      input,
+      output: transformCss(input)
+    };
+  }
 
   onChange = event => {
     const input = event.target.value;
@@ -53,6 +88,7 @@ class App extends Component {
   };
 
   onKeyDown(event) {
+    // cause the tab key to print tabs
     if (event.keyCode === 9) {
       const start = event.target.selectionStart;
       const {value} = event.target;
@@ -73,17 +109,29 @@ class App extends Component {
           <AppBar position="static" elevation={0}>
             <Toolbar>
               <Typography variant="title" color="inherit">
-                transform-css
+                🐠 transform-css
               </Typography>
+              <Tooltip title="View on GitHub">
+                <GitHubLink
+                  href="https://github.com/trevorblades/transform-css"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <GitHubLogo size={32} />
+                </GitHubLink>
+              </Tooltip>
             </Toolbar>
           </AppBar>
           <Content>
             <Input
+              spellCheck={false}
               value={this.state.input}
               onChange={this.onChange}
               onKeyDown={this.onKeyDown}
             />
-            <Output>{this.state.output}</Output>
+            <Output language="less" style={atomOneDark} customStyle={{padding}}>
+              {this.state.output}
+            </Output>
           </Content>
         </Container>
       </Fragment>

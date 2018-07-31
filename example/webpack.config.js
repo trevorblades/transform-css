@@ -1,4 +1,5 @@
 const HtmlPlugin = require('html-webpack-plugin');
+const WebappPlugin = require('webapp-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -25,6 +26,20 @@ module.exports = {
     new HtmlPlugin({
       title: 'transform-css',
       template: 'index.html'
+    }),
+    new WebappPlugin({
+      logo: './assets/favicon.png',
+      favicons: {
+        icons: {
+          android: false,
+          appleIcon: false,
+          appleStartup: false,
+          coast: false,
+          firefox: false,
+          windows: false,
+          yandex: false
+        }
+      }
     })
   ]
 };
