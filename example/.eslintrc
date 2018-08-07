@@ -1,5 +1,5 @@
 {
-  "extends": "@knoword/eslint-config/react",
+  "extends": "@trevorblades/eslint-config/react",
   "parser": "babel-eslint",
   "env": {
     "browser": true

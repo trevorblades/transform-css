@@ -10,7 +10,7 @@
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.55",
     "@babel/preset-env": "^7.0.0-beta.55",
     "@babel/preset-react": "^7.0.0-beta.55",
-    "@knoword/eslint-config": "^6.13.0",
+    "@trevorblades/eslint-config": "^6.14.0",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^8.0.0-beta.4",
     "eslint": "^5.2.0",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^1.4.2",
-    "@trevorblades/mui-theme": "^1.1.0",
+    "@trevorblades/mui-theme": "^1.2.0",
     "babel-plugin-emotion": "^9.2.6",
     "emotion": "^9.2.6",
     "jss": "^9.8.7",
