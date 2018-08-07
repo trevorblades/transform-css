@@ -1,5 +1,4 @@
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import GitHubLogo from 'react-icons/lib/fa/github';
 import IconButton from '@material-ui/core/IconButton';
@@ -141,7 +140,6 @@ class App extends Component {
 
     return (
       <Fragment>
-        <CssBaseline />
         <Container>
           <AppBar position="static" elevation={0}>
             <Toolbar>
