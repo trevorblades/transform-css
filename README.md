@@ -12,7 +12,7 @@ npm install transform-css
 
 ## Usage
 
-### transformCss(css, options)
+### `transformCss(css, options)`
 
 Takes a string of CSS as input and returns a string of LESS/SASS. Descendant selectors, subclasses, and pseudo-classes will be nested where it makes sense. Sets of rules will be spaced out for increased readability. Pass `options` as a second argument to customize the format of the returned styles.
 
