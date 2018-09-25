@@ -4,3 +4,7 @@ node_js: node
 cache:
   directories:
     - node_modules
+after_script:
+  - cd example
+  - npm install
+  - npm run build
