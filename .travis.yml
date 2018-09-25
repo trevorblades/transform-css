@@ -12,18 +12,17 @@ after_success:
   - cd example
   - npm install
   - npm run build
-before_deploy:
-  - cd dist
 deploy:
   provider: s3
   region: us-west-2
-  access_key_id: AKIAI26KZTWLPE2D6EBA
+  access_key_id: AKIAJLF73MKGDJEKZVGQ
   secret_access_key:
-    secure: ZW7KR3T0N+qLS9/HsnuBMQjsX+NJPgkyG4RQsUbWvuqM1LlqrGigyhanovNWkAFlGqQVpsqMl8DklnR6zMPOmGVYGEAlMhQNCOdKyzmcLTkgMDtkyLjq4uVfJu37pzueGV7fCaGDxWEkD3z2mvAs6EMEV0Z4bh31qv0+PHajzOSlNA4fW5gSBNMQgDbBk7XjXLpWIplOsmxtYqsC7B7TDtGQMZy+08XHWHNXA9ajVzsquCxbpNG9aF1vnkq6+NJ1cX0jauvJfM+W4mtcMjihVliEv25GmETHRggMrXfAlAtf/+ese5CoChlFu6Baf9sLgr6t9KDSMhDNJtsEqMmD/4PTK6JmQuW9/ClhedAdg5RVT5uyeZbQalXZGfdOM3piL4SdEMdkDlY25ReKz/6cc6xuJZJn50QkgBydgid1NtweMCnPSW2BqR7g4KkPcGtsqUp3CAkKPvxxIDmdUjLsMEyRi5IJ6TCwcF4DzItgdq7GFg1keClzZY2bfmdq1TTBCCtMIY1cJtf7c2NZ231dUI6lUP6YORoG4f/vqXtSR89GJO+dORTPGxO716pTQO35Gb/13B28ToMw8B/WDWG2gmGLlSJqJ8ReZmjS2Rf8W6rwqnKczebVeGS1F2X2xq4+5vODuoJ2pZcUyMZq90LMrIgtrBAxXoFkhWXSrE21ue8=
+    secure: I2yQmNFDbzLePWb9XTVgQVMfE5y2SczjrwWZ64guMzlJe1uJ1uXcyHc1IC19z1RgSg+WfxyOXJycRTOQ6JP2l4RdFMkPpyAfv1ooQbfIxwyejxxiciuZvKdxp/+wIDwIC3TPCiaTd7JKmpHxC9M+Y+I96I7AAIJc41Tsx0Kwu6TDmBpQC5RRhHFJeJGz1VmHM2KwVHK/g99C3d/hFJdu7lyG2gjkLIbBKMvw3ublY9jwOUvXoZf98prOS7xl0qLKY5vEIx1EvsP4pMxOQftGapR0RUtGlVI8nj6m4qPcT76WrwLFBH4sTcVhwMngiPAlhEHlzB4BZCE8iQSaLkcXi3SiBuG+UYBjpz7Y9hiSxHKWlYU5EmwdZpqXalBrGpeAi4gXuuIiNmQaINnOD9SpGkBgSBCLV6FU2oxlSXCyCrv8D/SdEB0Bh1sOjX2LwYqdq7hxRlkykJj2dqjKm1qnCbtsNXzVykrGuYayfFpWKLUtqgdayJiprgj0TCekLrlkEI258hvkeLVZMGPtwuU1jXF7QEHUs12eaOXdNwjxRKWlaBVxrdTvh6eM3izOWHMy/cC3TXuYXoP6b32GFTw9l3/kRm3GbCNCRVWRTfUfvgVclJKnueGTXddJy721T2rKnTt13+ivjlcwQXdqiwwtRFAMyH/2rB6JIEUG2hj1/EE=
   bucket: transform-css
+  local_dir: dist
+  upload-dir: "$TRAVIS_BRANCH"
   skip_cleanup: true
 after_deploy:
   - aws configure set preview.cloudfront true
   - aws configure set preview.create-invalidation true
-  - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"$AWS_CLOUDFRONT_ID\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":2,\"Items\":[\"/index.html\",\"/*\"]},\"CallerReference\":\"$(date +%s)\"}}"
-
+  - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"$AWS_CLOUDFRONT_ID\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":2,\"Items\":[\"/index.html\",\"/*\"]},\"CallerReference\":\"$(date+%s)\"}}"
