@@ -16,8 +16,8 @@ import styled from 'react-emotion';
 import theme from '@trevorblades/mui-theme';
 import transformCss from '../../lib';
 import withProps from 'recompose/withProps';
-import {hot} from 'react-hot-loader';
 import {atomOneDark} from 'react-syntax-highlighter/styles/hljs';
+import {hot} from 'react-hot-loader';
 
 const Container = styled.div({
   display: 'flex',

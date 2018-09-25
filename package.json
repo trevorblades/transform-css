@@ -27,7 +27,7 @@
     "@babel/cli": "^7.0.0-beta.55",
     "@babel/core": "^7.0.0-beta.55",
     "@babel/preset-env": "^7.0.0-beta.55",
-    "@knoword/eslint-config": "^6.13.0",
+    "@trevorblades/eslint-config": "^6.17.0",
     "eslint": "^5.2.0",
     "outdent": "^0.5.0"
   },

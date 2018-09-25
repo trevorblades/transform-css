@@ -1,16 +1,9 @@
+const EmojiFaviconPlugin = require('emoji-favicon-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
-const WebappPlugin = require('webapp-webpack-plugin');
-const path = require('path');
 
 module.exports = {
   node: {
     fs: 'empty'
-  },
-  context: path.join(__dirname, 'src'),
-  entry: './index.js',
-  output: {
-    path: path.resolve(__dirname, 'build'),
-    filename: '[name].[hash].js'
   },
   devtool: 'source-map',
   module: {
@@ -23,23 +16,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new EmojiFaviconPlugin('🐠'),
     new HtmlPlugin({
-      title: 'transform-css',
-      template: 'index.html'
-    }),
-    new WebappPlugin({
-      logo: './assets/favicon.png',
-      favicons: {
-        icons: {
-          android: false,
-          appleIcon: false,
-          appleStartup: false,
-          coast: false,
-          firefox: false,
-          windows: false,
-          yandex: false
-        }
-      }
+      title: 'Transform CSS',
+      template: 'src/index.html'
     })
   ]
 };

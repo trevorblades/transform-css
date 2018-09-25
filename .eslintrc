@@ -1,5 +1,5 @@
 {
-  "extends": "@knoword",
+  "extends": "@trevorblades",
   "env": {
     "node": true,
     "jest": true
