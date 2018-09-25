@@ -1,12 +1,9 @@
 version: 2
 
-defaults: &defaults
-  docker:
-    - image: circleci/node:8
-
 jobs:
   test:
-    <<: *defaults
+    docker:
+      - image: circleci/node:8
     working_directory: ~/transform-css
     steps:
       - checkout:
@@ -28,7 +25,8 @@ jobs:
             - transform-css
 
   test:example:
-    <<: *defaults
+    docker:
+      - image: circleci/node:8
     working_directory: ~/transform-css/example
     steps:
       - attach_workspace:
@@ -49,7 +47,8 @@ jobs:
             - transform-css
 
   build:
-    <<: *defaults
+    macos:
+      xcode: 10.0.0
     working_directory: ~/transform-css/example
     steps:
       - attach_workspace:
