@@ -14,8 +14,14 @@ after_success:
   - npm install
   - npm run build
 deploy:
-  - aws configure set region us-west-2
-  - aws s3 sync ./dist s3://transform-css/$TRAVIS_BRANCH --delete
+  provider: s3
+  region: us-west-2
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  bucket: transform-css
+  local_dir: dist
+  upload-dir: $TRAVIS_BRANCH
+  skip_cleanup: true
 after_deploy:
   - aws configure set preview.cloudfront true
   - aws configure set preview.create-invalidation true
