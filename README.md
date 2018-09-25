@@ -1,4 +1,4 @@
-# transform-css
+# Transform CSS
 
 [![CircleCI](https://circleci.com/gh/trevorblades/transform-css.svg?style=shield)](https://circleci.com/gh/trevorblades/transform-css)
 
@@ -6,8 +6,8 @@ This library transforms CSS into beautifully formatted styles ready to use with 
 
 ## Installation
 
-```
-npm install transform-css
+```shell
+$ npm install transform-css
 ```
 
 ## Usage
