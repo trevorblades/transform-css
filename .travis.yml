@@ -1,8 +1,7 @@
 os: osx
 language: node_js
-node_js: node
-python:
-  - 3.5
+node_js: 8
+python: 3.5
 cache:
   pip: true
   directories:
