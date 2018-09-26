@@ -1,6 +1,6 @@
 {
   "name": "transform-css",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Transforms CSS into beautifully formatted styles ready to use with a preprocessor",
   "author": "Trevor Blades <tdblades@gmail.com>",
   "repository": "trevorblades/transform-css",
