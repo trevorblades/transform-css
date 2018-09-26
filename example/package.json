@@ -13,7 +13,7 @@
     "@trevorblades/eslint-config": "^6.17.0",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^8.0.0-beta.4",
-    "emoji-favicon-webpack-plugin": "0.0.4",
+    "emoji-favicon-webpack-plugin": "^1.0.0",
     "eslint": "^5.2.0",
     "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.16.3",
