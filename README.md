@@ -12,7 +12,7 @@ $ npm install transform-css
 
 ## Usage
 
-### `transformCss(css, options)`
+### transformCss(css, options)
 
 Takes a string of CSS as input and returns a string of LESS/SASS. Descendant selectors, subclasses, and pseudo-classes will be nested where it makes sense. Sets of rules will be spaced out for increased readability. Pass `options` as a second argument to customize the format of the returned styles.
 
@@ -64,13 +64,13 @@ This will produce the following output:
 
 ## Options
 
-### `spaces`
+### spaces
 
 By default, two spaces will be used as indentation for the transformed styles. Use the `spaces` option to change this behaviour.
 
 Specify a number to control the number of spaces used, or `false` to use tabs.
 
-### `omitBracketsAndSemicolons`
+### omitBracketsAndSemicolons
 
 By default, `transform-css` will produce code that follows LESS or SCSS syntax, which use brackets to separate selectors from rule declarations and semicolons to separate declarations from one another.
 
