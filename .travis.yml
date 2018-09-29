@@ -6,7 +6,7 @@ cache:
   pip: true
   directories:
     - node_modules
-after_success:
+before_deploy:
   - cd example
   - npm install
   - npm run build
