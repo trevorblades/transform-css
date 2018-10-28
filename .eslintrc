@@ -1,7 +1,6 @@
 {
   "extends": "@trevorblades",
   "env": {
-    "node": true,
     "jest": true
   }
 }
