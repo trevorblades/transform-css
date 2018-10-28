@@ -25,14 +25,9 @@ const Container = styled.div({
   height: '100%'
 });
 
-const Heading = withProps({
-  variant: 'title',
-  color: 'inherit'
-})(
-  styled(Typography)({
-    marginRight: 'auto'
-  })
-);
+const Heading = styled(Typography)({
+  marginRight: 'auto'
+});
 
 const MenuItem = withProps({
   color: 'inherit',
@@ -66,14 +61,8 @@ const Input = styled.textarea({
   resize: 'none'
 });
 
-const Output = styled.div({
+const Output = styled(SyntaxHighlighter)({
   flexGrow: 1,
-  position: 'relative'
-});
-
-const StyledSyntaxHighlighter = styled(SyntaxHighlighter)({
-  flexGrow: 1,
-  height: '100%',
   margin: 0,
   fontSize,
   lineHeight
@@ -143,7 +132,9 @@ class App extends Component {
         <Container>
           <AppBar position="static" elevation={0}>
             <Toolbar>
-              <Heading>🐠 transform-css</Heading>
+              <Heading variant="h6" color="inherit">
+                🐠 Transform CSS
+              </Heading>
               <MenuItem href="https://twitter.com/trevorblades">
                 <TwitterLogo />
               </MenuItem>
@@ -161,41 +152,39 @@ class App extends Component {
               onChange={this.onInputChange}
               onKeyDown={this.onInputKeyDown}
             />
-            <Output>
-              <StyledSyntaxHighlighter
-                language={this.state.omit ? 'stylus' : 'less'}
-                style={atomOneDark}
-                customStyle={{
-                  padding,
-                  backgroundColor: theme.palette.grey[900]
-                }}
-                onClick={this.onOutputClick}
-              >
-                {output}
-              </StyledSyntaxHighlighter>
-              <Options>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={omit}
-                      name="omit"
-                      onChange={this.onSwitchChange}
-                    />
-                  }
-                  label="SASS/Stylus syntax"
-                />
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={spaces}
-                      name="spaces"
-                      onChange={this.onSwitchChange}
-                    />
-                  }
-                  label="Indent using spaces"
-                />
-              </Options>
+            <Output
+              language={this.state.omit ? 'stylus' : 'less'}
+              style={atomOneDark}
+              customStyle={{
+                padding,
+                backgroundColor: theme.palette.grey[900]
+              }}
+              onClick={this.onOutputClick}
+            >
+              {output}
             </Output>
+            <Options>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={omit}
+                    name="omit"
+                    onChange={this.onSwitchChange}
+                  />
+                }
+                label="SASS/Stylus syntax"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={spaces}
+                    name="spaces"
+                    onChange={this.onSwitchChange}
+                  />
+                }
+                label="Indent using spaces"
+              />
+            </Options>
           </Content>
         </Container>
       </Fragment>
