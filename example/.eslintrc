@@ -3,5 +3,9 @@
   "parser": "babel-eslint",
   "env": {
     "browser": true
+  },
+  "globals": {
+    "FAVICON": true,
+    "TITLE": true
   }
 }

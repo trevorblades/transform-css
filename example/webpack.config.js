@@ -1,6 +1,9 @@
 const EmojiFaviconPlugin = require('emoji-favicon-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
+const favicon = '🐠';
+const title = 'Transform CSS';
 module.exports = {
   node: {
     fs: 'empty'
@@ -15,10 +18,14 @@ module.exports = {
     ]
   },
   plugins: [
-    new EmojiFaviconPlugin('🐠'),
+    new EmojiFaviconPlugin(favicon),
     new HtmlPlugin({
-      title: 'Transform CSS',
+      title,
       template: 'src/index.html'
+    }),
+    new webpack.DefinePlugin({
+      FAVICON: JSON.stringify(favicon),
+      TITLE: JSON.stringify(title)
     })
   ]
 };

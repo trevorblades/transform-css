@@ -133,7 +133,7 @@ class App extends Component {
           <AppBar position="static" elevation={0}>
             <Toolbar>
               <Heading variant="h6" color="inherit">
-                🐠 Transform CSS
+                {FAVICON} {TITLE}
               </Heading>
               <MenuItem href="https://twitter.com/trevorblades">
                 <TwitterLogo />
