@@ -15,6 +15,7 @@ import select from 'select';
 import styled from 'react-emotion';
 import theme from '@trevorblades/mui-theme';
 import transformCss from '../../lib';
+import twemoji from 'twemoji';
 import withProps from 'recompose/withProps';
 import {atomOneDark} from 'react-syntax-highlighter/styles/hljs';
 import {hot} from 'react-hot-loader';
@@ -132,9 +133,13 @@ class App extends Component {
         <Container>
           <AppBar position="static" elevation={0}>
             <Toolbar>
-              <Heading variant="h6" color="inherit">
-                {FAVICON} {TITLE}
-              </Heading>
+              <Heading
+                variant="h6"
+                color="inherit"
+                dangerouslySetInnerHTML={{
+                  __html: twemoji.parse(`${FAVICON} ${TITLE}`)
+                }}
+              />
               <MenuItem href="https://twitter.com/trevorblades">
                 <TwitterLogo />
               </MenuItem>
