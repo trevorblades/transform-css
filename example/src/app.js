@@ -8,6 +8,7 @@ import Switch from '@material-ui/core/Switch';
 import SyntaxHighlighter from 'react-syntax-highlighter/light';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
+import Twemoji from 'react-twemoji';
 import TwitterLogo from 'react-icons/lib/fa/twitter';
 import Typography from '@material-ui/core/Typography';
 import outdent from 'outdent/lib';
@@ -15,7 +16,6 @@ import select from 'select';
 import styled from 'react-emotion';
 import theme from '@trevorblades/mui-theme';
 import transformCss from '../../lib';
-import twemoji from 'twemoji';
 import withProps from 'recompose/withProps';
 import {atomOneDark} from 'react-syntax-highlighter/styles/hljs';
 import {hot} from 'react-hot-loader';
@@ -133,13 +133,11 @@ class App extends Component {
         <Container>
           <AppBar position="static" elevation={0}>
             <Toolbar>
-              <Heading
-                variant="h6"
-                color="inherit"
-                dangerouslySetInnerHTML={{
-                  __html: twemoji.parse(`${FAVICON} ${TITLE}`)
-                }}
-              />
+              <Heading variant="h6" color="inherit">
+                <Twemoji>
+                  {FAVICON} {TITLE}
+                </Twemoji>
+              </Heading>
               <MenuItem href="https://twitter.com/trevorblades">
                 <TwitterLogo />
               </MenuItem>
