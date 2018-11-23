@@ -4,6 +4,7 @@
   "description": "Transforms CSS into beautifully formatted styles ready to use with a preprocessor",
   "author": "Trevor Blades <tdblades@gmail.com>",
   "repository": "trevorblades/transform-css",
+  "homepage": "https://transform-css.trevorblades.com",
   "license": "MIT",
   "keywords": [
     "css",
