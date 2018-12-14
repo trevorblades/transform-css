@@ -15,7 +15,7 @@ import outdent from 'outdent/lib';
 import select from 'select';
 import styled from 'react-emotion';
 import theme from '@trevorblades/mui-theme';
-import transformCss from '../../lib';
+import transformCss from 'transform-css';
 import withProps from 'recompose/withProps';
 import {atomOneDark} from 'react-syntax-highlighter/styles/hljs';
 import {hot} from 'react-hot-loader';

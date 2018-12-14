@@ -10,7 +10,7 @@
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "@trevorblades/eslint-config": "^6.18.0",
+    "@trevorblades/eslint-config": "^6.20.0",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^8.0.4",
     "emoji-favicon-webpack-plugin": "^1.1.1",
@@ -36,6 +36,7 @@
     "react-syntax-highlighter": "^8.0.1",
     "react-twemoji": "^0.1.0",
     "recompose": "^0.28.0",
-    "select": "^1.1.2"
+    "select": "^1.1.2",
+    "transform-css": "^1.0.7"
   }
 }
