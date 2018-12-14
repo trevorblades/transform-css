@@ -27,7 +27,10 @@ const Container = styled.div({
 });
 
 const Heading = styled(Typography)({
-  marginRight: 'auto'
+  marginRight: 'auto',
+  img: {
+    marginRight: theme.spacing.unit * 1.5
+  }
 });
 
 const MenuItem = withProps({
@@ -135,7 +138,8 @@ class App extends Component {
             <Toolbar>
               <Heading variant="h6" color="inherit">
                 <Twemoji>
-                  {FAVICON} {TITLE}
+                  {FAVICON}
+                  {TITLE}
                 </Twemoji>
               </Heading>
               <MenuItem href="https://twitter.com/trevorblades">
