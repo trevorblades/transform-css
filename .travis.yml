@@ -1,25 +1,4 @@
 language: node_js
-node_js: 8
-python: 3.5
+node_js: 10
 cache:
-  pip: true
-  directories:
-    - node_modules
-before_deploy:
-  - cd example
-  - npm install
-  - npm run build
-deploy:
-  provider: s3
-  region: us-west-2
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  bucket: transform-css
-  local_dir: dist
-  upload-dir: $TRAVIS_BRANCH
-  skip_cleanup: true
-after_deploy:
-  - pip install awscli
-  - aws configure set preview.cloudfront true
-  - aws configure set preview.create-invalidation true
-  - aws cloudfront create-invalidation --cli-input-json "{\"DistributionId\":\"$AWS_CLOUDFRONT_ID\",\"InvalidationBatch\":{\"Paths\":{\"Quantity\":2,\"Items\":[\"/index.html\",\"/*\"]},\"CallerReference\":\"$TRAVIS_BUILD_ID\"}}"
+  npm: true
