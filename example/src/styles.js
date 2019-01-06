@@ -11,9 +11,9 @@ export default () =>
     },
     // https://github.com/twitter/twemoji#inline-styles
     'img.emoji': {
-      height: '1.25em',
-      width: '1.25em',
+      height: '1em',
+      width: '1em',
       margin: '0 .05em 0 .1em',
-      verticalAlign: '-0.2em'
+      verticalAlign: '-0.125em'
     }
   });
