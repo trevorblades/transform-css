@@ -1,6 +1,6 @@
 # Transform CSS
 
-[![Build Status](https://travis-ci.com/trevorblades/transform-css.svg?branch=master)](https://travis-ci.com/trevorblades/transform-css)
+[![Build Status](https://github.com/trevorblades/transform-css/workflows/Node%20CI/badge.svg)](https://github.com/trevorblades/transform-css/actions)
 
 This library transforms CSS into beautifully formatted styles ready to use with a preprocessor like [LESS](http://lesscss.org/), [SASS](https://sass-lang.com/), or [Stylus](http://stylus-lang.com/). Check out a working example [here](http://transform-css.trevorblades.com)!
 
