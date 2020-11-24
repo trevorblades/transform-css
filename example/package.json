@@ -28,7 +28,7 @@
     "jss": "^9.8.7",
     "outdent": "^0.5.0",
     "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react-dom": "^16.4.2",
     "react-emotion": "^9.2.6",
     "react-hot-loader": "^4.3.4",
     "react-icons": "^2.2.7",
